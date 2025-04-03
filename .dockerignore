@@ -1,0 +1,6 @@
+.github
+.pnpm-store
+web/.next
+web/node_modules
+__pycache__
+api/.venv
