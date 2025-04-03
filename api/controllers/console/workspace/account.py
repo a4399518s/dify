@@ -1,5 +1,6 @@
 import datetime
 
+import logging
 import pytz
 from flask import request
 from flask_login import current_user  # type: ignore
@@ -156,14 +157,15 @@ class AccountTimezoneApi(Resource):
     @account_initialization_required
     @marshal_with(account_fields)
     def post(self):
+        logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
         parser = reqparse.RequestParser()
+        logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
         parser.add_argument("timezone", type=str, required=True, location="json")
         args = parser.parse_args()
 
         # Validate timezone string, e.g. America/New_York, Asia/Shanghai
         if args["timezone"] not in pytz.all_timezones:
             raise ValueError("Invalid timezone string.")
-
         updated_account = AccountService.update_account(current_user, timezone=args["timezone"])
 
         return updated_account

@@ -333,8 +333,10 @@ class AccountService:
                 setattr(account, field, value)
             else:
                 raise AttributeError(f"Invalid field: {field}")
-
+        
+        logging.info(f"xxxxxxxxxxxxx commit start")
         db.session.commit()
+        logging.info(f"xxxxxxxxxxxxx commit end")
         return account
 
     @staticmethod
