@@ -3,6 +3,8 @@ FROM registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04
 RUN mkdir -p /data/project/github/dify
 ADD . /data/project/github/dify/
 WORKDIR /data/project/github/dify/api
+RUN poetry config repositories.pypi https://mirrors.aliyun.com/pypi/simple/
+RUN poetry config --list
 RUN poetry install
 
 WORKDIR /data/project/github/dify/web
@@ -10,12 +12,13 @@ RUN pnpm install --registry=https://registry.npmmirror.com
 RUN pnpm run build
 
 # CMD [ "poetry run flask run --host 0.0.0.0 --port=5001 --debug" ]
-# CMD [ " poetry run celery -A app.celery worker -P gevent -c 1 -Q dataset,generation,mail,ops_trace --loglevel INF" ]
+# CMD [ "poetry run celery -A app.celery worker -P gevent -c 1 -Q dataset,generation,mail,ops_trace --loglevel INF" ]
+# CMD [ "pnpm run dev" ]
 # CMD [ "pnpm start" ]
 
-# docker build -t registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify .
+# docker build -t registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify --build-arg HTTP_PROXY=http://192.168.31.112:10088 --build-arg HTTPS_PROXY=http://192.168.31.112:10088 .
 
-# docker run -d --rm -p 3000:3000 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify
-# docker run --rm -v /data/project/github/dify:/data/project/github/dify -p 3000:3000 -p 5001:5001 -it --privileged=true --name dify registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify /bin/bash
+# docker run -d --rm -p 3000:3000 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify
+# docker run --rm -v /data/project/github/dify:/data/project/github/dify -p 3000:3000 -p 5001:5001 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify /bin/bash
 
 

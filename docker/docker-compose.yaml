@@ -439,7 +439,7 @@ x-shared-env: &shared-api-worker-env
 services:
   # API service
   api:
-    image: registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify
+    image: registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify
     restart: always
     environment:
       # Use the shared environment variables.
@@ -463,6 +463,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/data/project/github/dify/api/storage
       - /data/project/github/dify:/data/project/github/dify
+    working_dir: /data/project/github/dify/api
     command: poetry run flask --debug run --host 0.0.0.0 --port=5001
     networks:
       - ssrf_proxy_network
@@ -473,7 +474,7 @@ services:
   # worker service
   # The Celery worker for processing the queue.
   worker:
-    image: registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify
+    image: registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify
     restart: always
     environment:
       # Use the shared environment variables.
@@ -492,6 +493,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/data/project/github/dify/api/storage
       - /data/project/github/dify:/data/project/github/dify
+    working_dir: /data/project/github/dify/api
     command: poetry run celery -A app.celery worker -P gevent -c 1 -Q dataset,generation,mail,ops_trace --loglevel INFO
     networks:
       - ssrf_proxy_network
@@ -499,7 +501,7 @@ services:
 
   # Frontend web application.
   web:
-    image: registry.cn-zhangjiakou.aliyuncs.com/fengzhihao/ubuntu:all.24.04.dify
+    image: registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify
     restart: always
     environment:
       CONSOLE_API_URL: ${CONSOLE_API_URL:-}
