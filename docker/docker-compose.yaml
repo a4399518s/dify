@@ -464,7 +464,8 @@ services:
       - ./volumes/app/storage:/data/project/github/dify/api/storage
       - /data/project/github/dify:/data/project/github/dify
     working_dir: /data/project/github/dify/api
-    command: poetry run flask --debug run --host 0.0.0.0 --port=5001
+    # command: poetry run flask --debug run --host 0.0.0.0 --port=5001
+    command: poetry run flask run --host 0.0.0.0 --port=5001
     networks:
       - ssrf_proxy_network
       - default
@@ -523,7 +524,8 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - /data/project/github/dify:/data/project/github/dify
     working_dir: /data/project/github/dify/web
-    command: pnpm run dev
+    # command: pnpm run dev
+    command: pnpm start
     ports:
       - 3000:3000
 
