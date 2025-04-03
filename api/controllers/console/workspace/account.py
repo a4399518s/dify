@@ -1,5 +1,6 @@
 import datetime
 
+import json
 import logging
 import pytz
 from flask import request
@@ -84,6 +85,7 @@ class AccountProfileApi(Resource):
     @marshal_with(account_fields)
     @enterprise_license_required
     def get(self):
+        logging.info("current_user")
         return current_user
 
 

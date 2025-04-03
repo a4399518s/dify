@@ -204,10 +204,10 @@ class AccountService:
         is_setup: Optional[bool] = False,
     ) -> Account:
         """create account"""
-        if not FeatureService.get_system_features().is_allow_register and not is_setup:
-            from controllers.console.error import AccountNotFound
+        # if not FeatureService.get_system_features().is_allow_register and not is_setup:
+        #     from controllers.console.error import AccountNotFound
 
-            raise AccountNotFound()
+        #     raise AccountNotFound()
 
         if dify_config.BILLING_ENABLED and BillingService.is_email_in_freeze(email):
             raise AccountRegisterError(
@@ -580,15 +580,15 @@ def _get_login_cache_key(*, account_id: str, token: str):
 class TenantService:
     @staticmethod
     def create_tenant(name: str, is_setup: Optional[bool] = False, is_from_dashboard: Optional[bool] = False) -> Tenant:
-        """Create tenant"""
-        if (
-            not FeatureService.get_system_features().is_allow_create_workspace
-            and not is_setup
-            and not is_from_dashboard
-        ):
-            from controllers.console.error import NotAllowedCreateWorkspace
+        # """Create tenant"""
+        # if (
+        #     not FeatureService.get_system_features().is_allow_create_workspace
+        #     and not is_setup
+        #     and not is_from_dashboard
+        # ):
+        #     from controllers.console.error import NotAllowedCreateWorkspace
 
-            raise NotAllowedCreateWorkspace()
+        #     raise NotAllowedCreateWorkspace()
         tenant = Tenant(name=name)
 
         db.session.add(tenant)

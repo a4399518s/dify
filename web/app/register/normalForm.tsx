@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { RiContractLine, RiDoorLockLine, RiErrorWarningFill } from '@remixicon/react'
 import Loading from '../components/base/loading'
 import MailAndCodeAuth from './components/mail-and-code-auth'
-import MailAndPasswordAuth from './components/mail-and-password-auth'
+import MailAndPasswordRegedit from './components/mail-and-password-regedit'
 import SocialAuth from './components/social-auth'
 import SSOAuth from './components/sso-auth'
 import cn from '@/utils/classnames'
@@ -136,7 +136,7 @@ const NormalForm = () => {
           </div>
           : <div className="mx-auto w-full">
             <h2 className="title-4xl-semi-bold text-text-primary">{t('login.pageTitle')}</h2>
-            <p className='body-md-regular mt-2 text-text-tertiary'>{t('login.welcome')}</p>
+            <p className='body-md-regular mt-2 text-text-tertiary'>{t('login.welcome_regedit')}</p>
           </div>}
         <div className="bg-white">
           <div className="mt-6 flex flex-col gap-3">
@@ -163,7 +163,7 @@ const NormalForm = () => {
                 </div>}
               </>}
               {systemFeatures.enable_email_password_login && authType === 'password' && <>
-                <MailAndPasswordAuth isInvite={isInviteLink} isEmailSetup={systemFeatures.is_email_setup} allowRegistration={systemFeatures.is_allow_register} />
+                <MailAndPasswordRegedit isInvite={isInviteLink} isEmailSetup={systemFeatures.is_email_setup} allowRegistration={systemFeatures.is_allow_register} />
                 {systemFeatures.enable_email_code_login && <div className='cursor-pointer py-1 text-center' onClick={() => { updateAuthType('code') }}>
                   <span className='system-xs-medium text-components-button-secondary-accent-text'>{t('login.useVerificationCode')}</span>
                 </div>}

@@ -447,6 +447,8 @@ services:
       # Startup mode, 'api' starts the API server.
       MODE: api
       SENTRY_DSN: ${API_SENTRY_DSN:-}
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
       SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
       SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
       PLUGIN_REMOTE_INSTALL_HOST: ${EXPOSE_PLUGIN_DEBUGGING_HOST:-plugin_daemon}
@@ -461,7 +463,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/data/project/github/dify/api/storage
       - /data/project/github/dify:/data/project/github/dify
-    command: poetry run flask run --host 0.0.0.0 --port=5001 --debug
+    command: poetry run flask --debug run --host 0.0.0.0 --port=5001
     networks:
       - ssrf_proxy_network
       - default
