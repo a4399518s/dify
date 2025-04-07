@@ -448,11 +448,13 @@ services:
       # Startup mode, 'api' starts the API server.
       MODE: api
       SENTRY_DSN: ${API_SENTRY_DSN:-}
-      FLASK_ENV: development
-      FLASK_DEBUG: 1
+      FLASK_DEBUG: 0
       HTTPS_PROXY: "http://crash:202412231431@192.168.1.220:65534"
       HTTP_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      http_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      https_proxy: "http://crash:202412231431@192.168.1.220:65534"
       NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
+      no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
       SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
       PLUGIN_REMOTE_INSTALL_HOST: ${EXPOSE_PLUGIN_DEBUGGING_HOST:-plugin_daemon}
@@ -487,7 +489,10 @@ services:
       MODE: worker
       HTTPS_PROXY: "http://crash:202412231431@192.168.1.220:65534"
       HTTP_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      http_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      https_proxy: "http://crash:202412231431@192.168.1.220:65534"
       NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
+      no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       SENTRY_DSN: ${API_SENTRY_DSN:-}
       SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
       SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
