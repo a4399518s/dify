@@ -1,12 +1,17 @@
 import json
+import logging
 import time
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from typing import Any, Optional, Union, cast
 from uuid import uuid4
+import math
+
+from extensions.ext_database import db
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+from sqlalchemy import update
 
 from core.app.entities.app_invoke_entities import AdvancedChatAppGenerateEntity, InvokeFrom, WorkflowAppGenerateEntity
 from core.app.entities.queue_entities import (
@@ -56,7 +61,7 @@ from core.workflow.nodes.tool.entities import ToolNodeData
 from core.workflow.workflow_entry import WorkflowEntry
 from models.account import Account
 from models.enums import CreatedByRole, WorkflowRunTriggeredFrom
-from models.model import EndUser
+from models.model import App, EndUser, ModelPointConfig
 from models.workflow import (
     Workflow,
     WorkflowNodeExecution,
@@ -165,7 +170,24 @@ class WorkflowCycleManage:
         workflow_run = self._get_workflow_run(session=session, workflow_run_id=workflow_run_id)
 
         outputs = WorkflowEntry.handle_special_values(outputs)
+        total_user_point = (
+            db.session.query(func.sum(WorkflowNodeExecution.user_point))
+            .filter(WorkflowNodeExecution.workflow_run_id == workflow_run.id)
+            .scalar()
+        )
+        logging.info(f"xxxxxxxxxxx total_user_point: {total_user_point} 11111{workflow_run.id}  user_id: {workflow_run.inputs_dict.get("sys.user_id")}")
+        ## 根据最终结果计算用户余额。
+        app = session.query(App).filter(App.id == workflow_run.app_id).one_or_none()
+        stmt = (
+            update(Account)
+            .where(Account.id == workflow_run.inputs_dict.get("sys.user_id"))
+            .values(point=Account.point + app.min_point - total_user_point)
+        )
+        session.execute(stmt)
+        session.commit()
+        
 
+        workflow_run.total_point = total_user_point
         workflow_run.status = WorkflowRunStatus.SUCCEEDED.value
         workflow_run.outputs = json.dumps(outputs or {})
         workflow_run.elapsed_time = time.perf_counter() - start_at
@@ -345,6 +367,37 @@ class WorkflowCycleManage:
         workflow_node_execution.finished_at = finished_at
         workflow_node_execution.elapsed_time = elapsed_time
 
+        ## 如果需要修改用户积分，则在这里修改。
+        if change_user_point := outputs.get("change_user_point"):
+            workflow_node_execution.user_point = workflow_node_execution.user_point+math.ceil(change_user_point)
+
+        ## 如果调用了大模型，且有process_data，计算用户积分。
+        if workflow_node_execution.node_type == NodeType.LLM.value and process_data is not None:
+            model_point_config = ModelPointConfig.query.filter(
+                ModelPointConfig.model_provider == process_data.get("model_provider"),
+                ModelPointConfig.model_name == process_data.get("model_name"),
+            ).one_or_none()
+            if model_point_config is None:
+                model_point_config = ModelPointConfig.query.filter(
+                    ModelPointConfig.model_provider == process_data.get("model_provider"),
+                    ModelPointConfig.model_name == "default",
+                ).one_or_none()
+            if model_point_config is None:
+                model_point_config = ModelPointConfig.query.filter(
+                    ModelPointConfig.model_provider == "default",
+                    ModelPointConfig.model_name == process_data.get("model_name"),
+                ).one_or_none()
+            if model_point_config is None:
+                model_point_config = ModelPointConfig.query.filter(
+                    ModelPointConfig.model_provider == "default",
+                    ModelPointConfig.model_name == "default",
+                ).one_or_none()
+            ## 模型使用的token数量
+            
+            model_token = event.execution_metadata[NodeRunMetadataKey.TOTAL_TOKENS]
+            point = model_token/model_point_config.model_point*model_point_config.sys_points
+            workflow_node_execution.user_point = workflow_node_execution.user_point+math.ceil(point)
+            
         workflow_node_execution = session.merge(workflow_node_execution)
         return workflow_node_execution
 

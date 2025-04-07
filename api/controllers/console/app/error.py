@@ -95,6 +95,11 @@ class DraftWorkflowNotExist(BaseHTTPException):
     error_code = "draft_workflow_not_exist"
     description = "Draft workflow need to be initialized."
     code = 400
+    
+class InsufficientBalanceError(BaseHTTPException):
+    error_code = "insufficient_balance"
+    description = "用户余额不足，无法完成此次操作。"
+    code = 400
 
 
 class DraftWorkflowNotSync(BaseHTTPException):

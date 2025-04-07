@@ -8,7 +8,7 @@ import StatusContainer from '@/app/components/workflow/run/status-container'
 type ResultProps = {
   status: string
   time?: number
-  tokens?: number
+  total_point?: number
   error?: string
   exceptionCounts?: number
 }
@@ -16,7 +16,7 @@ type ResultProps = {
 const StatusPanel: FC<ResultProps> = ({
   status,
   time,
-  tokens,
+  total_point,
   error,
   exceptionCounts,
 }) => {
@@ -90,13 +90,13 @@ const StatusPanel: FC<ResultProps> = ({
           </div>
         </div>
         <div className='flex-[33%]'>
-          <div className='system-2xs-medium-uppercase mb-1 text-text-tertiary'>{t('runLog.resultPanel.tokens')}</div>
+          <div className='system-2xs-medium-uppercase mb-1 text-text-tertiary'>{t('runLog.resultPanel.point')}</div>
           <div className='system-sm-medium flex items-center gap-1 text-text-secondary'>
             {status === 'running' && (
               <div className='h-2 w-20 rounded-sm bg-text-quaternary' />
             )}
             {status !== 'running' && (
-              <span>{`${tokens || 0} Tokens`}</span>
+              <span>{`${total_point || 0} Total Point`}</span>
             )}
           </div>
         </div>

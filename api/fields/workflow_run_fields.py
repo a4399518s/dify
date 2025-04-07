@@ -72,6 +72,7 @@ workflow_run_detail_fields = {
     "error": fields.String,
     "elapsed_time": fields.Float,
     "total_tokens": fields.Integer,
+    "total_point": fields.Integer,
     "total_steps": fields.Integer,
     "created_by_role": fields.String,
     "created_by_account": fields.Nested(simple_account_fields, attribute="created_by_account", allow_null=True),
@@ -114,6 +115,7 @@ workflow_run_node_execution_fields = {
     "created_by_account": fields.Nested(simple_account_fields, attribute="created_by_account", allow_null=True),
     "created_by_end_user": fields.Nested(simple_end_user_fields, attribute="created_by_end_user", allow_null=True),
     "finished_at": TimestampField,
+    "user_point": fields.Integer,
 }
 
 workflow_run_node_execution_list_fields = {

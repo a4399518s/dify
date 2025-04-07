@@ -462,8 +462,7 @@ services:
       - plugin_daemon
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/data/project/github/dify/api/storage
-      - /data/project/github/dify:/data/project/github/dify
+      - /opt/docker/app/storage:/data/project/github/dify/api/storage
     working_dir: /data/project/github/dify/api
     # command: poetry run flask --debug run --host 0.0.0.0 --port=5001
     command: poetry run flask run --host 0.0.0.0 --port=5001
@@ -493,8 +492,7 @@ services:
       - redis
     volumes:
       # Mount the storage directory to the container, for storing user files.
-      - ./volumes/app/storage:/data/project/github/dify/api/storage
-      - /data/project/github/dify:/data/project/github/dify
+      - /opt/docker/app/storage:/data/project/github/dify/api/storage
     working_dir: /data/project/github/dify/api
     command: poetry run celery -A app.celery worker -P gevent -c 1 -Q dataset,generation,mail,ops_trace --loglevel INFO
     networks:
@@ -512,7 +510,6 @@ services:
       NEXT_PUBLIC_API_PREFIX: /console/api
       NEXT_PUBLIC_PUBLIC_API_PREFIX: /api
       SENTRY_DSN: ${WEB_SENTRY_DSN:-}
-      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-0}
       TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
       CSP_WHITELIST: ${CSP_WHITELIST:-}
       MARKETPLACE_API_URL: ${MARKETPLACE_API_URL:-https://marketplace.dify.ai}
@@ -523,13 +520,27 @@ services:
       LOOP_NODE_MAX_COUNT: ${LOOP_NODE_MAX_COUNT:-100}
       MAX_TOOLS_NUM: ${MAX_TOOLS_NUM:-10}
       MAX_PARALLEL_LIMIT: ${MAX_PARALLEL_LIMIT:-10}
-      MAX_ITERATIONS_NUM: ${MAX_ITERATIONS_NUM:-5}    
-    volumes:
-      # Mount the storage directory to the container, for storing user files.
-      - /data/project/github/dify:/data/project/github/dify
+      MAX_ITERATIONS_NUM: ${MAX_ITERATIONS_NUM:-5}
+      NEXT_PUBLIC_DEPLOY_ENV: ${NEXT_PUBLIC_DEPLOY_ENV:-DEVELOPMENT}
+      NEXT_PUBLIC_EDITION: ${NEXT_PUBLIC_EDITION:-SELF_HOSTED}
+      NEXT_PUBLIC_API_PREFIX: ${NEXT_PUBLIC_API_PREFIX:-https://agent.hctalent.cn/console/api}
+      NEXT_PUBLIC_PUBLIC_API_PREFIX: ${NEXT_PUBLIC_PUBLIC_API_PREFIX:-https://agent.hctalent.cn/api}
+      NEXT_PUBLIC_MARKETPLACE_API_PREFIX: ${NEXT_PUBLIC_MARKETPLACE_API_PREFIX:-https://marketplace.dify.ai/api/v1}
+      NEXT_PUBLIC_MARKETPLACE_URL_PREFIX: ${NEXT_PUBLIC_MARKETPLACE_URL_PREFIX:-https://marketplace.dify.ai}
+      NEXT_PUBLIC_SENTRY_DSN: ${NEXT_PUBLIC_SENTRY_DSN:-}
+      NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-1}
+      NEXT_PUBLIC_UPLOAD_IMAGE_AS_ICON: ${NEXT_PUBLIC_UPLOAD_IMAGE_AS_ICON:-false}
+      NEXT_PUBLIC_TEXT_GENERATION_TIMEOUT_MS: ${NEXT_PUBLIC_TEXT_GENERATION_TIMEOUT_MS:-60000}
+      NEXT_PUBLIC_CSP_WHITELIST: ${NEXT_PUBLIC_CSP_WHITELIST:-}
+      NEXT_PUBLIC_GITHUB_ACCESS_TOKEN: ${NEXT_PUBLIC_GITHUB_ACCESS_TOKEN:-}
+      NEXT_PUBLIC_TOP_K_MAX_VALUE: ${NEXT_PUBLIC_TOP_K_MAX_VALUE:-10}
+      NEXT_PUBLIC_INDEXING_MAX_SEGMENTATION_TOKENS_LENGTH: ${NEXT_PUBLIC_INDEXING_MAX_SEGMENTATION_TOKENS_LENGTH:-4000}
+      NEXT_PUBLIC_LOOP_NODE_MAX_COUNT: ${NEXT_PUBLIC_LOOP_NODE_MAX_COUNT:-100}
+      NEXT_PUBLIC_MAX_TOOLS_NUM: ${NEXT_PUBLIC_MAX_TOOLS_NUM:-10}
+      NEXT_PUBLIC_MAX_PARALLEL_LIMIT: ${NEXT_PUBLIC_MAX_PARALLEL_LIMIT:-10}
     working_dir: /data/project/github/dify/web
     command: pnpm run dev
-    # command: sleep 100d
+    # command: pnpm start
     ports:
       - 3000:3000
 
@@ -550,7 +561,7 @@ services:
                -c 'maintenance_work_mem=${POSTGRES_MAINTENANCE_WORK_MEM:-64MB}'
                -c 'effective_cache_size=${POSTGRES_EFFECTIVE_CACHE_SIZE:-4096MB}'
     volumes:
-      - ./volumes/db/data:/var/lib/postgresql/data
+      - /opt/docker/db/data:/var/lib/postgresql/data
     healthcheck:
       test: [ 'CMD', 'pg_isready' ]
       interval: 1s
@@ -567,7 +578,7 @@ services:
       REDISCLI_AUTH: ${REDIS_PASSWORD:-difyai123456}
     volumes:
       # Mount the redis data directory to the container.
-      - ./volumes/redis/data:/data
+      - /opt/docker/redis/data:/data
     # Set the redis password when startup redis server.
     command: redis-server --requirepass ${REDIS_PASSWORD:-difyai123456}
     healthcheck:
@@ -591,8 +602,8 @@ services:
       HTTPS_PROXY: ${SANDBOX_HTTPS_PROXY:-http://ssrf_proxy:3128}
       SANDBOX_PORT: ${SANDBOX_PORT:-8194}
     volumes:
-      - ./volumes/sandbox/dependencies:/dependencies
-      - ./volumes/sandbox/conf:/conf
+      - /opt/docker/sandbox/dependencies:/dependencies
+      - /opt/docker/sandbox/conf:/conf
     healthcheck:
       test: [ 'CMD', 'curl', '-f', 'http://localhost:8194/health' ]
     networks:
@@ -622,7 +633,7 @@ services:
     ports:
       - "${EXPOSE_PLUGIN_DEBUGGING_PORT:-5003}:${PLUGIN_DEBUGGING_PORT:-5003}"
     volumes:
-      - ./volumes/plugin_daemon:/app/storage
+      - /opt/docker/plugin_daemon:/app/storage
     depends_on:
       - db
 
@@ -656,10 +667,10 @@ services:
     profiles:
       - certbot
     volumes:
-      - ./volumes/certbot/conf:/etc/letsencrypt
-      - ./volumes/certbot/www:/var/www/html
-      - ./volumes/certbot/logs:/var/log/letsencrypt
-      - ./volumes/certbot/conf/live:/etc/letsencrypt/live
+      - /opt/docker/certbot/conf:/etc/letsencrypt
+      - /opt/docker/certbot/www:/var/www/html
+      - /opt/docker/certbot/logs:/var/log/letsencrypt
+      - /opt/docker/certbot/conf/live:/etc/letsencrypt/live
       - ./certbot/update-cert.template.txt:/update-cert.template.txt
       - ./certbot/docker-entrypoint.sh:/docker-entrypoint.sh
     environment:
@@ -680,9 +691,9 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./nginx/docker-entrypoint.sh:/docker-entrypoint-mount.sh
       - ./nginx/ssl:/etc/ssl # cert dir (legacy)
-      - ./volumes/certbot/conf/live:/etc/letsencrypt/live # cert dir (with certbot container)
-      - ./volumes/certbot/conf:/etc/letsencrypt
-      - ./volumes/certbot/www:/var/www/html
+      - /opt/docker/certbot/conf/live:/etc/letsencrypt/live # cert dir (with certbot container)
+      - /opt/docker/certbot/conf:/etc/letsencrypt
+      - /opt/docker/certbot/www:/var/www/html
     entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
     environment:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:-_}
@@ -718,7 +729,7 @@ services:
     restart: always
     volumes:
       # Mount the Weaviate data directory to the con tainer.
-      - ./volumes/weaviate:/var/lib/weaviate
+      - /opt/docker/weaviate:/var/lib/weaviate
     environment:
       # The Weaviate configurations
       # You can refer to the [Weaviate](https://weaviate.io/developers/weaviate/config-refs/env-vars) documentation for more information.
@@ -741,7 +752,7 @@ services:
       - qdrant
     restart: always
     volumes:
-      - ./volumes/qdrant:/qdrant/storage
+      - /opt/docker/qdrant:/qdrant/storage
     environment:
       QDRANT_API_KEY: ${QDRANT_API_KEY:-difyai123456}
 
@@ -769,7 +780,7 @@ services:
     entrypoint: [ "" ]
     command: sh -c "/opt/couchbase/init/init-cbserver.sh"
     volumes:
-      - ./volumes/couchbase/data:/opt/couchbase/var/lib/couchbase/data
+      - /opt/docker/couchbase/data:/opt/couchbase/var/lib/couchbase/data
     healthcheck:
       # ensure bucket was created before proceeding
       test: [ "CMD-SHELL", "curl -s -f -u Administrator:password http://localhost:8091/pools/default/buckets | grep -q '\\[{' || exit 1" ]
@@ -796,7 +807,7 @@ services:
       PG_BIGM: ${PGVECTOR_PG_BIGM:-false}
       PG_BIGM_VERSION: ${PGVECTOR_PG_BIGM_VERSION:-1.2-20240606}
     volumes:
-      - ./volumes/pgvector/data:/var/lib/postgresql/data
+      - /opt/docker/pgvector/data:/var/lib/postgresql/data
       - ./pgvector/docker-entrypoint.sh:/docker-entrypoint.sh
     entrypoint: [ '/docker-entrypoint.sh' ]
     healthcheck:
@@ -820,7 +831,7 @@ services:
       # postgres data directory
       PGDATA: ${PGVECTOR_PGDATA:-/var/lib/postgresql/data/pgdata}
     volumes:
-      - ./volumes/pgvecto_rs/data:/var/lib/postgresql/data
+      - /opt/docker/pgvecto_rs/data:/var/lib/postgresql/data
     healthcheck:
       test: [ 'CMD', 'pg_isready' ]
       interval: 1s
@@ -834,7 +845,7 @@ services:
       - chroma
     restart: always
     volumes:
-      - ./volumes/chroma:/chroma/chroma
+      - /opt/docker/chroma:/chroma/chroma
     environment:
       CHROMA_SERVER_AUTHN_CREDENTIALS: ${CHROMA_SERVER_AUTHN_CREDENTIALS:-difyai123456}
       CHROMA_SERVER_AUTHN_PROVIDER: ${CHROMA_SERVER_AUTHN_PROVIDER:-chromadb.auth.token_authn.TokenAuthenticationServerProvider}
@@ -848,9 +859,9 @@ services:
       - oceanbase
     restart: always
     volumes:
-      - ./volumes/oceanbase/data:/root/ob
-      - ./volumes/oceanbase/conf:/root/.obd/cluster
-      - ./volumes/oceanbase/init.d:/root/boot/init.d
+      - /opt/docker/oceanbase/data:/root/ob
+      - /opt/docker/oceanbase/conf:/root/.obd/cluster
+      - /opt/docker/oceanbase/init.d:/root/boot/init.d
     environment:
       OB_MEMORY_LIMIT: ${OCEANBASE_MEMORY_LIMIT:-6G}
       OB_SYS_PASSWORD: ${OCEANBASE_VECTOR_PASSWORD:-difyai123456}
@@ -887,7 +898,7 @@ services:
       ETCD_QUOTA_BACKEND_BYTES: ${ETCD_QUOTA_BACKEND_BYTES:-4294967296}
       ETCD_SNAPSHOT_COUNT: ${ETCD_SNAPSHOT_COUNT:-50000}
     volumes:
-      - ./volumes/milvus/etcd:/etcd
+      - /opt/docker/milvus/etcd:/etcd
     command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
     healthcheck:
       test: [ 'CMD', 'etcdctl', 'endpoint', 'health' ]
@@ -906,7 +917,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
     volumes:
-      - ./volumes/milvus/minio:/minio_data
+      - /opt/docker/milvus/minio:/minio_data
     command: minio server /minio_data --console-address ":9001"
     healthcheck:
       test: [ 'CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live' ]
@@ -927,7 +938,7 @@ services:
       MINIO_ADDRESS: ${MINIO_ADDRESS:-minio:9000}
       common.security.authorizationEnabled: ${MILVUS_AUTHORIZATION_ENABLED:-true}
     volumes:
-      - ./volumes/milvus/milvus:/var/lib/milvus
+      - /opt/docker/milvus/milvus:/var/lib/milvus
     healthcheck:
       test: [ 'CMD', 'curl', '-f', 'http://localhost:9091/healthz' ]
       interval: 30s
@@ -962,7 +973,7 @@ services:
         soft: ${OPENSEARCH_NOFILE_SOFT:-65536}
         hard: ${OPENSEARCH_NOFILE_HARD:-65536}
     volumes:
-      - ./volumes/opensearch/data:/usr/share/opensearch/data
+      - /opt/docker/opensearch/data:/usr/share/opensearch/data
     networks:
       - opensearch-net
 
@@ -974,7 +985,7 @@ services:
     environment:
       OPENSEARCH_HOSTS: '["https://opensearch:9200"]'
     volumes:
-      - ./volumes/opensearch/opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
+      - /opt/docker/opensearch/opensearch_dashboards.yml:/usr/share/opensearch-dashboards/config/opensearch_dashboards.yml
     networks:
       - opensearch-net
     depends_on:
@@ -993,7 +1004,7 @@ services:
       GS_PORT: ${OPENGAUSS_PORT:-6600}
       GS_DB: ${OPENGAUSS_DATABASE:-dify}
     volumes:
-      - ./volumes/opengauss/data:/var/lib/opengauss/data
+      - /opt/docker/opengauss/data:/var/lib/opengauss/data
     healthcheck:
       test: ["CMD-SHELL", "netstat -lntp | grep tcp6 > /dev/null 2>&1"]
       interval: 10s
@@ -1011,9 +1022,9 @@ services:
     restart: always
     tty: true
     volumes:
-      - ./volumes/myscale/data:/var/lib/clickhouse
-      - ./volumes/myscale/log:/var/log/clickhouse-server
-      - ./volumes/myscale/config/users.d/custom_users_config.xml:/etc/clickhouse-server/users.d/custom_users_config.xml
+      - /opt/docker/myscale/data:/var/lib/clickhouse
+      - /opt/docker/myscale/log:/var/log/clickhouse-server
+      - /opt/docker/myscale/config/users.d/custom_users_config.xml:/etc/clickhouse-server/users.d/custom_users_config.xml
     ports:
       - ${MYSCALE_PORT:-8123}:${MYSCALE_PORT:-8123}
 
@@ -1088,7 +1099,7 @@ services:
       - unstructured
     restart: always
     volumes:
-      - ./volumes/unstructured:/app/data
+      - /opt/docker/unstructured:/app/data
 
 networks:
   # create a network between sandbox, api and ssrf_proxy, and can not access outside.

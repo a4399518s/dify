@@ -25,7 +25,7 @@ type ResultPanelProps = {
   status: string
   error?: string
   elapsed_time?: number
-  total_tokens?: number
+  total_point?: number
   created_at?: number
   created_by?: string
   finished_at?: number
@@ -47,7 +47,7 @@ const ResultPanel: FC<ResultPanelProps> = ({
   status,
   error,
   elapsed_time,
-  total_tokens,
+  total_point,
   created_at,
   created_by,
   steps,
@@ -72,7 +72,7 @@ const ResultPanel: FC<ResultPanelProps> = ({
         <StatusPanel
           status={status}
           time={elapsed_time}
-          tokens={total_tokens}
+          total_point={total_point}
           error={error}
           exceptionCounts={exceptionCounts}
         />
@@ -148,7 +148,7 @@ const ResultPanel: FC<ResultPanelProps> = ({
           executor={created_by}
           startTime={created_at}
           time={elapsed_time}
-          tokens={total_tokens}
+          total_point={total_point}
           steps={steps}
           showSteps={showSteps}
         />

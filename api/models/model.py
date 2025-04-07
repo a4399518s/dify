@@ -39,6 +39,15 @@ if TYPE_CHECKING:
     from .workflow import Workflow
 
 
+class ModelPointConfig(db.Model):
+    __tablename__ = "model_point_config"
+    __table_args__ = (db.PrimaryKeyConstraint("model_provider","model_name", name="model_point_config_pk"),)
+
+    model_provider = db.Column(db.String(255), nullable=False)
+    model_name = db.Column(db.String(255), nullable=False)
+    model_point = db.Column(db.Integer, nullable=False, default=1)
+    sys_points = db.Column(db.Integer, nullable=False, default=1)
+
 class DifySetup(Base):
     __tablename__ = "dify_setups"
     __table_args__ = (db.PrimaryKeyConstraint("version", name="dify_setup_pkey"),)
@@ -103,6 +112,7 @@ class App(Base):
     updated_by = db.Column(StringUUID, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
     use_icon_as_answer_icon = db.Column(db.Boolean, nullable=False, server_default=db.text("false"))
+    min_point = db.Column(db.Integer, nullable=False, server_default=db.text("0"))
 
     @property
     def desc_or_prompt(self):
