@@ -113,7 +113,7 @@ const NodePanel: FC<Props> = ({
           <div className={cn(
             'system-xs-semibold-uppercase grow truncate text-text-secondary',
             hideInfo && '!text-xs',
-          )} title={nodeInfo.title}>{nodeInfo.title}1111111</div>
+          )} title={nodeInfo.title}>{nodeInfo.title}</div>
           {/* {nodeInfo.status !== 'running' && !hideInfo && (
             <div className='system-xs-regular shrink-0 text-text-tertiary'>{nodeInfo.execution_metadata?.total_tokens ? `${getTokenCount(nodeInfo.execution_metadata?.total_tokens || 0)} tokens · ` : ''}{`${getTime(nodeInfo.elapsed_time || 0)}`}</div>
           )} */}
