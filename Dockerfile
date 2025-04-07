@@ -16,9 +16,9 @@ RUN pnpm run build
 # CMD [ "pnpm run dev" ]
 # CMD [ "pnpm start" ]
 
-# docker build -t registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify --build-arg HTTP_PROXY=http://192.168.31.112:10088 --build-arg HTTPS_PROXY=http://192.168.31.112:10088 .
+# docker build -t registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify.$(date +"%Y%m%d%H%M%S") --build-arg HTTP_PROXY=http://192.168.31.112:10088 --build-arg HTTPS_PROXY=http://192.168.31.112:10088  --build-arg NO_PROXY=localhost,127.0.0.1,registry.npmmirror.com .
 
-# docker run -d --rm -p 3000:3000 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify
+# docker run -d --rm -p 3001:3000 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify.$(date +"%Y%m%d%H%M%S") pnpm start
 # docker run --rm -v /data/project/github/dify:/data/project/github/dify -p 3000:3000 -p 5001:5001 -it --privileged=true --name dify registry.cn-shanghai.aliyuncs.com/fengzhihao/dify:ubuntu.all.24.04.dify /bin/bash
 
-
+# echo $(date +"%Y%m%d%H%M%S")
