@@ -6,6 +6,7 @@ from flask import abort, request
 from flask_restful import Resource, inputs, marshal_with, reqparse  # type: ignore
 from sqlalchemy.orm import Session
 from werkzeug.exceptions import Forbidden, InternalServerError, NotFound
+from sqlalchemy import update
 
 import services
 from configs import dify_config
@@ -13,6 +14,7 @@ from controllers.console import api
 from controllers.console.app.error import (
     ConversationCompletedError,
     DraftWorkflowNotExist,
+    InsufficientBalanceError,
     DraftWorkflowNotSync,
 )
 from controllers.console.app.wraps import get_app_model
@@ -55,7 +57,8 @@ class DraftWorkflowApi(Resource):
         # fetch draft workflow by app_model
         workflow_service = WorkflowService()
         workflow = workflow_service.get_draft_workflow(app_model=app_model)
-
+        logger.info(f"get draft workflow: {app_model.min_point}")
+        
         if not workflow:
             raise DraftWorkflowNotExist()
 
@@ -109,8 +112,8 @@ class DraftWorkflowApi(Resource):
         if not isinstance(current_user, Account):
             raise Forbidden()
 
+        
         workflow_service = WorkflowService()
-
         try:
             environment_variables_list = args.get("environment_variables") or []
             environment_variables = [
@@ -352,6 +355,23 @@ class DraftWorkflowRunApi(Resource):
         parser.add_argument("files", type=list, required=False, location="json")
         args = parser.parse_args()
 
+        session: Session = db.session
+        stmt = (
+            update(Account)
+            .where(Account.id == current_user.id)
+            .where(Account.point - app_model.min_point >= 0)
+            .values(point=Account.point - app_model.min_point)
+        )
+
+        result = session.execute(stmt)
+        session.commit()
+
+        logger.info(f"xxxxxxxxxxx result: {result.rowcount}")
+        if result.rowcount == 0:
+            # If the update did not affect any rows, it means the user does not have enough points
+            # to create a workflow.
+            raise InsufficientBalanceError()
+            
         try:
             response = AppGenerateService.generate(
                 app_model=app_model,

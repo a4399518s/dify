@@ -421,6 +421,7 @@ class WorkflowRun(Base):
     created_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
     finished_at = db.Column(db.DateTime)
     exceptions_count = db.Column(db.Integer, server_default=db.text("0"))
+    sum_point = db.Column(db.Integer, server_default=db.text("0"))
 
     @property
     def created_by_account(self):
@@ -652,6 +653,7 @@ class WorkflowNodeExecution(Base):
     created_by_role: Mapped[str] = mapped_column(db.String(255))
     created_by: Mapped[str] = mapped_column(StringUUID)
     finished_at: Mapped[Optional[datetime]] = mapped_column(db.DateTime)
+    user_point: Mapped[int] = mapped_column(db.Integer, server_default=db.text("0"))
 
     @property
     def created_by_account(self):

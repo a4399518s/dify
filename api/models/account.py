@@ -19,7 +19,7 @@ class AccountStatus(enum.StrEnum):
     CLOSED = "closed"
 
 
-class Account(UserMixin, Base):
+class Account(UserMixin, Base): 
     __tablename__ = "accounts"
     __table_args__ = (db.PrimaryKeyConstraint("id", name="account_pkey"), db.Index("account_email_idx", "email"))
 
@@ -39,6 +39,7 @@ class Account(UserMixin, Base):
     initialized_at = db.Column(db.DateTime)
     created_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
     updated_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
+    point = db.Column(db.Integer, nullable=False, server_default=db.text("0"))
 
     @property
     def is_password_set(self):
