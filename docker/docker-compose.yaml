@@ -624,6 +624,12 @@ services:
     environment:
       # Use the shared environment variables.
       <<: *shared-api-worker-env
+      HTTPS_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      HTTP_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      http_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      https_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
+      no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       DB_DATABASE: ${DB_PLUGIN_DATABASE:-dify_plugin}
       SERVER_PORT: ${PLUGIN_DAEMON_PORT:-5002}
       SERVER_KEY: ${PLUGIN_DAEMON_KEY:-lYkiYYT6owG+71oLerGzA7GXCgOT++6ovaezWAjpCjf+Sjc3ZtU+qUEi}
@@ -657,6 +663,12 @@ services:
     entrypoint: [ 'sh', '-c', "cp /docker-entrypoint-mount.sh /docker-entrypoint.sh && sed -i 's/\r$$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh && /docker-entrypoint.sh" ]
     environment:
       # pls clearly modify the squid env vars to fit your network environment.
+      HTTPS_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      HTTP_PROXY: "http://crash:202412231431@192.168.1.220:65534"
+      http_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      https_proxy: "http://crash:202412231431@192.168.1.220:65534"
+      NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
+      no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       HTTP_PORT: ${SSRF_HTTP_PORT:-3128}
       COREDUMP_DIR: ${SSRF_COREDUMP_DIR:-/var/spool/squid}
       REVERSE_PROXY_PORT: ${SSRF_REVERSE_PROXY_PORT:-8194}
