@@ -7,6 +7,7 @@ const translation = {
     status: '状态',
     time: '运行时间',
     tokens: '总 token 数',
+    point: '总 point 数',
   },
   meta: {
     title: '元数据',
@@ -16,6 +17,7 @@ const translation = {
     startTime: '开始时间',
     time: '运行时间',
     tokens: '总 token 数',
+    point: '总 point 数',
     steps: '运行步数',
   },
   resultEmpty: {

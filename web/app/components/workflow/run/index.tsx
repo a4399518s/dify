@@ -151,7 +151,7 @@ const RunPanel: FC<RunProps> = ({ hideResult, activeTab = 'RESULT', runID, getRe
             status={runDetail.status}
             error={runDetail.error}
             elapsed_time={runDetail.elapsed_time}
-            total_tokens={runDetail.total_tokens}
+            total_point={runDetail.total_point}
             created_at={runDetail.created_at}
             created_by={executor}
             steps={runDetail.total_steps}

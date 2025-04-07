@@ -1,3 +1,4 @@
+import logging
 from flask_restful import Resource, marshal_with, reqparse  # type: ignore
 from flask_restful.inputs import int_range  # type: ignore
 
@@ -73,7 +74,7 @@ class WorkflowRunDetailApi(Resource):
 
         workflow_run_service = WorkflowRunService()
         workflow_run = workflow_run_service.get_workflow_run(app_model=app_model, run_id=run_id)
-
+        logging.info(f"xxxxxxxxxxx workflow_run: {workflow_run.total_point}")
         return workflow_run
 
 

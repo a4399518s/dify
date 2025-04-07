@@ -291,6 +291,7 @@ export type WorkflowRunDetailResponse = {
   error?: string
   elapsed_time?: number
   total_tokens?: number
+  total_point?: number
   total_steps: number
   created_by_role: 'account' | 'end_user'
   created_by_account?: AccountInfo

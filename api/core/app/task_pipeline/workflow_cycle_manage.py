@@ -11,6 +11,7 @@ from extensions.ext_database import db
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+from sqlalchemy import update
 
 from core.app.entities.app_invoke_entities import AdvancedChatAppGenerateEntity, InvokeFrom, WorkflowAppGenerateEntity
 from core.app.entities.queue_entities import (
@@ -60,7 +61,7 @@ from core.workflow.nodes.tool.entities import ToolNodeData
 from core.workflow.workflow_entry import WorkflowEntry
 from models.account import Account
 from models.enums import CreatedByRole, WorkflowRunTriggeredFrom
-from models.model import EndUser, ModelPointConfig
+from models.model import App, EndUser, ModelPointConfig
 from models.workflow import (
     Workflow,
     WorkflowNodeExecution,
@@ -171,10 +172,22 @@ class WorkflowCycleManage:
         outputs = WorkflowEntry.handle_special_values(outputs)
         total_user_point = (
             db.session.query(func.sum(WorkflowNodeExecution.user_point))
-            .filter(WorkflowNodeExecution.workflow_run_id == '644e75ae-fe93-4e90-94cf-95e710e8a602')
+            .filter(WorkflowNodeExecution.workflow_run_id == workflow_run.id)
             .scalar()
         )
-        workflow_run.sum_point = total_user_point
+        logging.info(f"xxxxxxxxxxx total_user_point: {total_user_point} 11111{workflow_run.id}  user_id: {workflow_run.inputs_dict.get("sys.user_id")}")
+        ## 根据最终结果计算用户余额。
+        app = session.query(App).filter(App.id == workflow_run.app_id).one_or_none()
+        stmt = (
+            update(Account)
+            .where(Account.id == workflow_run.inputs_dict.get("sys.user_id"))
+            .values(point=Account.point + app.min_point - total_user_point)
+        )
+        session.execute(stmt)
+        session.commit()
+        
+
+        workflow_run.total_point = total_user_point
         workflow_run.status = WorkflowRunStatus.SUCCEEDED.value
         workflow_run.outputs = json.dumps(outputs or {})
         workflow_run.elapsed_time = time.perf_counter() - start_at

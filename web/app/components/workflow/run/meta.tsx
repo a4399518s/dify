@@ -8,7 +8,7 @@ type Props = {
   executor?: string
   startTime?: number
   time?: number
-  tokens?: number
+  total_point?: number
   steps?: number
   showSteps?: boolean
 }
@@ -18,7 +18,7 @@ const MetaData: FC<Props> = ({
   executor,
   startTime,
   time,
-  tokens,
+  total_point,
   steps = 1,
   showSteps = true,
 }) => {
@@ -86,13 +86,13 @@ const MetaData: FC<Props> = ({
           </div>
         </div>
         <div className='flex'>
-          <div className='system-xs-regular w-[104px] shrink-0 truncate px-2 py-1.5 text-text-tertiary'>{t('runLog.meta.tokens')}</div>
+          <div className='system-xs-regular w-[104px] shrink-0 truncate px-2 py-1.5 text-text-tertiary'>{t('runLog.meta.point')}</div>
           <div className='system-xs-regular grow px-2 py-1.5 text-text-secondary'>
             {status === 'running' && (
               <div className='my-1 h-2 w-[48px] rounded-sm bg-text-quaternary'/>
             )}
             {status !== 'running' && (
-              <span>{`${tokens || 0} Tokens`}</span>
+              <span>{`${total_point || 0} Point`}</span>
             )}
           </div>
         </div>

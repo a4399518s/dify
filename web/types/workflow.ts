@@ -40,6 +40,7 @@ export type NodeTracing = {
   parallel_run_id?: string
   error?: string
   elapsed_time: number
+  user_point: number
   execution_metadata?: {
     total_tokens: number
     total_price: number
