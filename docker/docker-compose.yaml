@@ -519,8 +519,8 @@ services:
       MAX_PARALLEL_LIMIT: ${MAX_PARALLEL_LIMIT:-10}
       MAX_ITERATIONS_NUM: ${MAX_ITERATIONS_NUM:-5}    
     working_dir: /data/project/github/dify/web
-    # command: pnpm run dev
-    command: pnpm start
+    command: pnpm run dev
+    # command: pnpm start
     ports:
       - 3000:3000
 
