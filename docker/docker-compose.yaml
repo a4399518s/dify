@@ -463,7 +463,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - /opt/docker/app/storage:/data/project/github/dify/api/storage
       - /opt/project/github/dify:/data/project/github/dify
-    working_dir: /opt/project/github/dify/api
+    working_dir: /data/project/github/dify/api
     # command: poetry run flask --debug run --host 0.0.0.0 --port=5001
     command: poetry run flask run --host 0.0.0.0 --port=5001
     networks:
@@ -494,7 +494,7 @@ services:
       # Mount the storage directory to the container, for storing user files.
       - /opt/docker/app/storage:/data/project/github/dify/api/storage
       - /opt/project/github/dify:/data/project/github/dify
-    working_dir: /opt/project/github/dify/api
+    working_dir: /data/project/github/dify/api
     command: poetry run celery -A app.celery worker -P gevent -c 1 -Q dataset,generation,mail,ops_trace --loglevel INFO
     networks:
       - ssrf_proxy_network
@@ -523,7 +523,7 @@ services:
     volumes:
       # Mount the storage directory to the container, for storing user files.
       - /opt/project/github/dify:/data/project/github/dify
-    working_dir: /opt/project/github/dify/web
+    working_dir: /data/project/github/dify/web
     # command: pnpm run dev
     command: pnpm start
     ports:
