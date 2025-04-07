@@ -17,6 +17,7 @@ const translation = {
       status: '状态',
       runtime: '运行时间',
       tokens: 'TOKENS',
+      point: 'POINT',
       user: '用户或账户',
       version: '版本',
     },

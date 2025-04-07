@@ -17,6 +17,7 @@ account_fields = {
     "last_login_at": TimestampField,
     "last_login_ip": fields.String,
     "created_at": TimestampField,
+    "point": fields.Integer,
 }
 
 account_with_role_fields = {

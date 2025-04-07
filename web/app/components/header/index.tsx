@@ -29,7 +29,7 @@ const navClassName = `
 `
 
 const Header = () => {
-  const { isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator } = useAppContext()
+  const { userProfile,isCurrentWorkspaceEditor, isCurrentWorkspaceDatasetOperator } = useAppContext()
   const selectedSegment = useSelectedLayoutSegment()
   const media = useBreakpoints()
   const isMobile = media === MediaType.mobile
@@ -91,6 +91,9 @@ const Header = () => {
             {!isCurrentWorkspaceDatasetOperator && <ToolsNav className={navClassName} />}
           </div>
         )
+      }      
+      {
+        <div className='flex shrink-0 items-center'>Point: {userProfile.point}</div>
       }
       <div className='flex shrink-0 items-center'>
         <EnvNav />

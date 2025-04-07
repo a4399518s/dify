@@ -240,6 +240,7 @@ export type WorkflowRunDetail = {
   currency: string
   total_steps: number
   finished_at: number
+  total_point: number
 }
 export type AccountInfo = {
   id: string

@@ -91,7 +91,8 @@ const WorkflowAppLogList: FC<ILogs> = ({ logs, appDetail, onRefresh }) => {
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.startTime')}</td>
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.status')}</td>
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.runtime')}</td>
-            <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.tokens')}</td>
+            <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.point')}</td>
+            {/* <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>11111{t('appLog.table.header.tokens')}1111</td> */}
             <td className='whitespace-nowrap rounded-r-lg bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.user')}</td>
           </tr>
         </thead>
@@ -119,7 +120,7 @@ const WorkflowAppLogList: FC<ILogs> = ({ logs, appDetail, onRefresh }) => {
                   log.workflow_run.elapsed_time === 0 && 'text-text-quaternary',
                 )}>{`${log.workflow_run.elapsed_time.toFixed(3)}s`}</div>
               </td>
-              <td className='p-3 pr-2'>{log.workflow_run.total_tokens}</td>
+              <td className='p-3 pr-2'>{log.workflow_run.total_point}</td>
               <td className='p-3 pr-2'>
                 <div className={cn(endUser === defaultValue ? 'text-text-quaternary' : 'text-text-secondary', 'overflow-hidden text-ellipsis whitespace-nowrap')}>
                   {endUser}

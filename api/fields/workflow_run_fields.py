@@ -15,6 +15,7 @@ workflow_run_for_log_fields = {
     "created_at": TimestampField,
     "finished_at": TimestampField,
     "exceptions_count": fields.Integer,
+    "total_point": fields.Integer,
 }
 
 workflow_run_for_list_fields = {
