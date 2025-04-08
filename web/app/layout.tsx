@@ -9,7 +9,7 @@ import './styles/globals.css'
 import './styles/markdown.scss'
 
 export const metadata = {
-  title: 'Dify',
+  title: '美数合',
 }
 
 export const viewport: Viewport = {
@@ -34,6 +34,7 @@ const LocaleLayout = async ({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <title>美数合</title>
       </head>
       <body
         className="color-scheme h-full select-auto"

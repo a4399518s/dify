@@ -61,7 +61,7 @@ const Datasets = ({
 
   useEffect(() => {
     loadingStateRef.current = isLoading
-    document.title = `${t('dataset.knowledge')} - Dify`
+    document.title = `${t('dataset.knowledge')} - 美数合`
   }, [isLoading, t])
 
   const onScroll = useCallback(

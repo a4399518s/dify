@@ -1,7 +1,7 @@
 const translation = {
   pageTitle: '嗨，近来可好',
-  welcome: '👋 欢迎来到 Dify, 登录以继续',
-  welcome_regedit: '👋 欢迎来到 Dify, 注册以继续',
+  welcome: '👋 欢迎来到 美数合, 登录以继续',
+  welcome_regedit: '👋 欢迎来到 美数合, 注册以继续',
   email: '邮箱',
   emailPlaceholder: '输入邮箱地址',
   password: '密码',
@@ -104,11 +104,11 @@ const translation = {
   noLoginMethod: '未配置身份认证方式',
   noLoginMethodTip: '请联系系统管理员添加身份认证方式',
   licenseExpired: '许可证已过期',
-  licenseExpiredTip: '您所在空间的 Dify Enterprise 许可证已过期，请联系管理员以继续使用 Dify。',
+  licenseExpiredTip: '您所在空间的 美数合 Enterprise 许可证已过期，请联系管理员以继续使用 美数合',
   licenseLost: '许可证丢失',
-  licenseLostTip: '无法连接 Dify 许可证服务器，请联系管理员以继续使用 Dify。',
+  licenseLostTip: '无法连接 美数合 许可证服务器，请联系管理员以继续使用 美数合',
   licenseInactive: '许可证未激活',
-  licenseInactiveTip: '您所在空间的 Dify Enterprise 许可证尚未激活，请联系管理员以继续使用 Dify。',
+  licenseInactiveTip: '您所在空间的 美数合 Enterprise 许可证尚未激活，请联系管理员以继续使用 美数合',
 }
 
 export default translation
