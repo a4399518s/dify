@@ -184,7 +184,7 @@ const NormalForm = () => {
               </div>
             </div>
           </>}
-          <div className="system-xs-regular mt-2 block w-full text-text-tertiary">
+          {/* <div className="system-xs-regular mt-2 block w-full text-text-tertiary">
             {t('login.tosDesc')}
             &nbsp;
             <Link
@@ -198,6 +198,13 @@ const NormalForm = () => {
               target='_blank' rel='noopener noreferrer'
               href='https://dify.ai/privacy'
             >{t('login.pp')}</Link>
+          </div> */}
+          <div className="system-xs-regular mt-2 block w-full text-text-tertiary">
+            {t('login.tosDesc')}
+            &nbsp;
+            {t('login.tos')}
+            &nbsp;&&nbsp;
+            {t('login.pp')}
           </div>
           {/* {IS_CE_EDITION && <div className="w-hull system-xs-regular mt-2 block text-text-tertiary">
             {t('login.goToInit')}

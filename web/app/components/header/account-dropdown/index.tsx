@@ -120,25 +120,8 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                       </div>
                     </MenuItem>
                   </div>
-                  <div className='p-1'>
-                    <MenuItem>
-                      <Link
-                        className={classNames(itemClassName, 'group justify-between',
-                          'data-[active]:bg-state-base-hover',
-                        )}
-                        href={
-                          locale !== LanguagesSupported[1] ? 'https://docs.dify.ai/' : `https://docs.dify.ai/v/${locale.toLowerCase()}/`
-                        }
-                        target='_blank' rel='noopener noreferrer'>
-                        <RiBookOpenLine className='size-4 shrink-0 text-text-tertiary' />
-                        <div className='system-md-regular grow px-1 text-text-secondary'>{t('common.userProfile.helpCenter')}</div>
-                        <RiArrowRightUpLine className='size-[14px] shrink-0 text-text-tertiary' />
-                      </Link>
-                    </MenuItem>
-                    <Support />
-                    {IS_CLOUD_EDITION && isCurrentWorkspaceOwner && <Compliance />}
-                  </div>
-                  <div className='p-1'>
+                  {/* <div  */}
+                  {/* <div className='p-1'>
                     <MenuItem>
                       <Link
                         className={classNames(itemClassName, 'group justify-between',
@@ -182,7 +165,7 @@ export default function AppSelector({ isMobile }: IAppSelector) {
                         </MenuItem>
                       )
                     }
-                  </div>
+                  </div> */}
                   <MenuItem>
                     <div className='p-1' onClick={() => handleLogout()}>
                       <div
