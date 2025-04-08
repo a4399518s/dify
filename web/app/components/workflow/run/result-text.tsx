@@ -52,7 +52,7 @@ const ResultText: FC<ResultTextProps> = ({
         <>
           {outputs && (
             <div className='px-4 py-2'>
-              <Markdown content={outputs} />
+              <div dangerouslySetInnerHTML={{ __html: outputs }}></div>
             </div>
           )}
           {!!allFiles?.length && allFiles.map(item => (
