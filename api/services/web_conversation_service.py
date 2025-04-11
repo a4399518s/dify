@@ -24,6 +24,7 @@ class WebConversationService:
         limit: int,
         invoke_from: InvokeFrom,
         pinned: Optional[bool] = None,
+        from_source: Optional[str] = "console",
         sort_by="-updated_at",
     ) -> InfiniteScrollPagination:
         if not user:
@@ -54,6 +55,7 @@ class WebConversationService:
             last_id=last_id,
             limit=limit,
             invoke_from=invoke_from,
+            from_source=from_source,
             include_ids=include_ids,
             exclude_ids=exclude_ids,
             sort_by=sort_by,

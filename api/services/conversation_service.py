@@ -1,5 +1,6 @@
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
+import logging
 from typing import Optional, Union
 
 from sqlalchemy import asc, desc, func, or_, select
@@ -28,15 +29,18 @@ class ConversationService:
         invoke_from: InvokeFrom,
         include_ids: Optional[Sequence[str]] = None,
         exclude_ids: Optional[Sequence[str]] = None,
+        from_source: Optional[str] = "console",
         sort_by: str = "-updated_at",
     ) -> InfiniteScrollPagination:
         if not user:
             return InfiniteScrollPagination(data=[], limit=limit, has_more=False)
-
+        
+        # logging.info(f"xxxxxxxxxxxxx ChatApi  EndUser {isinstance(user, EndUser)}")
+        # logging.info(f"xxxxxxxxxxxxx ChatApi  Account {isinstance(user, Account)}")
         stmt = select(Conversation).where(
             Conversation.is_deleted == False,
             Conversation.app_id == app_model.id,
-            Conversation.from_source == ("api" if isinstance(user, EndUser) else "console"),
+            Conversation.from_source == from_source,
             Conversation.from_end_user_id == (user.id if isinstance(user, EndUser) else None),
             Conversation.from_account_id == (user.id if isinstance(user, Account) else None),
             or_(Conversation.invoke_from.is_(None), Conversation.invoke_from == invoke_from.value),
@@ -101,8 +105,10 @@ class ConversationService:
         user: Optional[Union[Account, EndUser]],
         name: str,
         auto_generate: bool,
+        from_source: Optional[str] = "console",
     ):
-        conversation = cls.get_conversation(app_model, conversation_id, user)
+        # logging.info(f"xxxxxxxxxxxxx rename  {from_source}")
+        conversation = cls.get_conversation(app_model, conversation_id, user,from_source)
 
         if auto_generate:
             return cls.auto_generate_name(app_model, conversation)
@@ -140,20 +146,20 @@ class ConversationService:
         return conversation
 
     @classmethod
-    def get_conversation(cls, app_model: App, conversation_id: str, user: Optional[Union[Account, EndUser]]):
+    def get_conversation(cls, app_model: App, conversation_id: str, user: Optional[Union[Account, EndUser]],from_source: Optional[str] = "console"):
         conversation = (
             db.session.query(Conversation)
             .filter(
                 Conversation.id == conversation_id,
                 Conversation.app_id == app_model.id,
-                Conversation.from_source == ("api" if isinstance(user, EndUser) else "console"),
+                Conversation.from_source == from_source,
                 Conversation.from_end_user_id == (user.id if isinstance(user, EndUser) else None),
                 Conversation.from_account_id == (user.id if isinstance(user, Account) else None),
                 Conversation.is_deleted == False,
             )
             .first()
         )
-
+        
         if not conversation:
             raise ConversationNotExistsError()
 

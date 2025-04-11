@@ -1,3 +1,4 @@
+import logging
 from flask_restful import marshal_with, reqparse  # type: ignore
 from flask_restful.inputs import int_range  # type: ignore
 from sqlalchemy.orm import Session
@@ -18,7 +19,7 @@ from services.web_conversation_service import WebConversationService
 
 class ConversationListApi(WebApiResource):
     @marshal_with(conversation_infinite_scroll_pagination_fields)
-    def get(self, app_model, end_user):
+    def get(self, app_model, account):
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
@@ -43,13 +44,15 @@ class ConversationListApi(WebApiResource):
 
         try:
             with Session(db.engine) as session:
+                # logging.info(f"xxxxxxxxxxxxx ConversationListApi")
                 return WebConversationService.pagination_by_last_id(
                     session=session,
                     app_model=app_model,
-                    user=end_user,
+                    user=account,
                     last_id=args["last_id"],
                     limit=args["limit"],
                     invoke_from=InvokeFrom.WEB_APP,
+                    from_source="api",
                     pinned=pinned,
                     sort_by=args["sort_by"],
                 )
@@ -75,7 +78,7 @@ class ConversationApi(WebApiResource):
 
 class ConversationRenameApi(WebApiResource):
     @marshal_with(simple_conversation_fields)
-    def post(self, app_model, end_user, c_id):
+    def post(self, app_model, account, c_id):
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
@@ -88,7 +91,7 @@ class ConversationRenameApi(WebApiResource):
         args = parser.parse_args()
 
         try:
-            return ConversationService.rename(app_model, conversation_id, end_user, args["name"], args["auto_generate"])
+            return ConversationService.rename(app_model, conversation_id, account, args["name"], args["auto_generate"],"api")
         except ConversationNotExistsError:
             raise NotFound("Conversation Not Exists.")
 

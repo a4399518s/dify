@@ -159,9 +159,9 @@ class AccountTimezoneApi(Resource):
     @account_initialization_required
     @marshal_with(account_fields)
     def post(self):
-        logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
+        # logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
         parser = reqparse.RequestParser()
-        logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
+        # logging.info(f"xxxxxxxxxxxxx AccountTimezoneApi start")
         parser.add_argument("timezone", type=str, required=True, location="json")
         args = parser.parse_args()
 

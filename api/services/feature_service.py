@@ -111,7 +111,8 @@ class FeatureService:
 
         if dify_config.MARKETPLACE_ENABLED:
             system_features.enable_marketplace = True
-
+        system_features.sso_enforced_for_signin=True
+        system_features.sso_enforced_for_web=True
         return system_features
 
     @classmethod

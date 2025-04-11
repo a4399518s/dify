@@ -57,7 +57,8 @@ class MessageListApi(WebApiResource):
     }
 
     @marshal_with(message_infinite_scroll_pagination_fields)
-    def get(self, app_model, end_user):
+    def get(self, app_model, account):
+        # logging.info(f"xxxxxxxxxxxxx MessageListApi 2222")
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
@@ -70,7 +71,7 @@ class MessageListApi(WebApiResource):
 
         try:
             return MessageService.pagination_by_first_id(
-                app_model, end_user, args["conversation_id"], args["first_id"], args["limit"]
+                app_model, account, args["conversation_id"], args["first_id"], args["limit"],"asc","api"
             )
         except services.errors.conversation.ConversationNotExistsError:
             raise NotFound("Conversation Not Exists.")

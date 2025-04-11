@@ -30,6 +30,7 @@ class AppGenerateService:
         args: Mapping[str, Any],
         invoke_from: InvokeFrom,
         streaming: bool = True,
+        from_source: str = "console",
     ):
         """
         App Content Generate
@@ -62,7 +63,7 @@ class AppGenerateService:
                 return rate_limit.generate(
                     CompletionAppGenerator.convert_to_event_stream(
                         CompletionAppGenerator().generate(
-                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming
+                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming,from_source=from_source
                         ),
                     ),
                     request_id=request_id,
@@ -71,7 +72,7 @@ class AppGenerateService:
                 return rate_limit.generate(
                     AgentChatAppGenerator.convert_to_event_stream(
                         AgentChatAppGenerator().generate(
-                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming
+                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming,from_source=from_source
                         ),
                     ),
                     request_id,
@@ -80,7 +81,7 @@ class AppGenerateService:
                 return rate_limit.generate(
                     ChatAppGenerator.convert_to_event_stream(
                         ChatAppGenerator().generate(
-                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming
+                            app_model=app_model, user=user, args=args, invoke_from=invoke_from, streaming=streaming,from_source=from_source
                         ),
                     ),
                     request_id=request_id,
@@ -96,6 +97,7 @@ class AppGenerateService:
                             args=args,
                             invoke_from=invoke_from,
                             streaming=streaming,
+                            from_source=from_source,
                         ),
                     ),
                     request_id=request_id,
@@ -113,6 +115,7 @@ class AppGenerateService:
                             streaming=streaming,
                             call_depth=0,
                             workflow_thread_pool_id=None,
+                            from_source=from_source,
                         ),
                     ),
                     request_id,

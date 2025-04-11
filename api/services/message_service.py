@@ -34,6 +34,7 @@ class MessageService:
         first_id: Optional[str],
         limit: int,
         order: str = "asc",
+        from_source: Optional[str] = "console",
     ) -> InfiniteScrollPagination:
         if not user:
             return InfiniteScrollPagination(data=[], limit=limit, has_more=False)
@@ -42,7 +43,7 @@ class MessageService:
             return InfiniteScrollPagination(data=[], limit=limit, has_more=False)
 
         conversation = ConversationService.get_conversation(
-            app_model=app_model, user=user, conversation_id=conversation_id
+            app_model=app_model, user=user, conversation_id=conversation_id,from_source=from_source
         )
 
         fetch_limit = limit + 1

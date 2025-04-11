@@ -48,6 +48,7 @@ const SwrInitor = ({
           return
         }
         if (!((consoleToken && refreshToken) || (consoleTokenFromLocalStorage && refreshTokenFromLocalStorage))) {
+          debugger
           router.replace('/signin')
           return
         }
@@ -60,6 +61,7 @@ const SwrInitor = ({
         setInit(true)
       }
       catch (error) {
+        debugger
         router.replace('/signin')
       }
     })()

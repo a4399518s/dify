@@ -18,6 +18,7 @@ import Confirm from '@/app/components/base/confirm'
 import RenameModal from '@/app/components/base/chat/chat-with-history/sidebar/rename-modal'
 import LogoSite from '@/app/components/base/logo/logo-site'
 import type { ConversationItem } from '@/models/share'
+import { useSearchParams } from 'next/navigation'
 import cn from '@/utils/classnames'
 
 type Props = {
@@ -44,6 +45,20 @@ const Sidebar = ({ isPanel }: Props) => {
     isResponding,
   } = useChatWithHistoryContext()
   const isSidebarCollapsed = sidebarCollapseState
+
+  const searchParams = useSearchParams()
+  const consoleToken = decodeURIComponent(searchParams.get('access_token') || '')
+  const refreshToken = decodeURIComponent(searchParams.get('refresh_token') || '')
+  const consoleTokenFromLocalStorage = localStorage?.getItem('console_token')
+  const refreshTokenFromLocalStorage = localStorage?.getItem('refresh_token')
+
+  const sharedToken = globalThis.location.pathname.split('/').slice(-1)[0]
+  console.log("sharedToken",sharedToken)
+  if (!((consoleToken && refreshToken) || (consoleTokenFromLocalStorage && refreshTokenFromLocalStorage))) {
+    localStorage.setItem("sharedToken", sharedToken)
+    window.location.href = '/signin'
+    return
+  }
 
   const [showConfirm, setShowConfirm] = useState<ConversationItem | null>(null)
   const [showRename, setShowRename] = useState<ConversationItem | null>(null)
