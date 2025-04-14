@@ -90,6 +90,7 @@ yarl = "~1.18.3"
 # Related transparent dependencies with pinned version
 # required by main implementations
 ############################################################
+wechatpy = {extras = ["cryptography"], version = "^1.8.18"}
 [tool.poetry.group.indirect.dependencies]
 kaleido = "0.2.1"
 rank-bm25 = "~0.2.2"
