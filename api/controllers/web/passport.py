@@ -22,7 +22,7 @@ class PassportResource(Resource):
         app_token = request.headers.get("X-App-Token")
         if app_code is None:
             raise Unauthorized("X-App-Code header is missing.")
-        if app_code is None:
+        if app_token is None:
             raise Unauthorized("X-App-Token header is missing.")
 
         if system_features.sso_enforced_for_web:
