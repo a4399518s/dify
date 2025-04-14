@@ -47,6 +47,7 @@ class AdvancedChatAppGenerator(MessageBasedAppGenerator):
         args: Mapping[str, Any],
         invoke_from: InvokeFrom,
         streaming: Literal[False],
+        from_source: Optional[str] = "console",
     ) -> Mapping[str, Any]: ...
 
     @overload
@@ -58,6 +59,7 @@ class AdvancedChatAppGenerator(MessageBasedAppGenerator):
         args: Mapping,
         invoke_from: InvokeFrom,
         streaming: Literal[True],
+        from_source: Optional[str] = "console",
     ) -> Generator[Mapping | str, None, None]: ...
 
     @overload
@@ -69,6 +71,7 @@ class AdvancedChatAppGenerator(MessageBasedAppGenerator):
         args: Mapping,
         invoke_from: InvokeFrom,
         streaming: bool,
+        from_source: Optional[str] = "console",
     ) -> Mapping[str, Any] | Generator[str | Mapping, None, None]: ...
 
     def generate(
@@ -79,6 +82,7 @@ class AdvancedChatAppGenerator(MessageBasedAppGenerator):
         args: Mapping,
         invoke_from: InvokeFrom,
         streaming: bool = True,
+        from_source: Optional[str] = "console",
     ) -> Mapping[str, Any] | Generator[str | Mapping, None, None]:
         """
         Generate App response.
@@ -107,7 +111,7 @@ class AdvancedChatAppGenerator(MessageBasedAppGenerator):
         conversation_id = args.get("conversation_id")
         if conversation_id:
             conversation = ConversationService.get_conversation(
-                app_model=app_model, conversation_id=conversation_id, user=user
+                app_model=app_model, conversation_id=conversation_id, user=user,from_source=from_source
             )
 
         # parse files

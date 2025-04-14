@@ -92,7 +92,7 @@ const WorkflowAppLogList: FC<ILogs> = ({ logs, appDetail, onRefresh }) => {
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.status')}</td>
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.runtime')}</td>
             <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.point')}</td>
-            {/* <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>11111{t('appLog.table.header.tokens')}1111</td> */}
+            {/* <td className='whitespace-nowrap bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.tokens')}1111</td> */}
             <td className='whitespace-nowrap rounded-r-lg bg-background-section-burn py-1.5 pl-3'>{t('appLog.table.header.user')}</td>
           </tr>
         </thead>

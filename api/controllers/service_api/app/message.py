@@ -13,7 +13,7 @@ from fields.conversation_fields import message_file_fields
 from fields.message_fields import agent_thought_fields, feedback_fields, retriever_resource_fields
 from fields.raws import FilesContainedField
 from libs.helper import TimestampField, uuid_value
-from models.model import App, AppMode, EndUser
+from models.model import App, AppMode, EndUser, Account
 from services.errors.message import SuggestedQuestionsAfterAnswerDisabledError
 from services.message_service import MessageService
 
@@ -43,7 +43,8 @@ class MessageListApi(Resource):
 
     @validate_app_token(fetch_user_arg=FetchUserArg(fetch_from=WhereisUserArg.QUERY))
     @marshal_with(message_infinite_scroll_pagination_fields)
-    def get(self, app_model: App, end_user: EndUser):
+    def get(self, app_model: App, account: Account):
+        # logging.info(f"xxxxxxxxxxxxx MessageListApi")
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
@@ -56,7 +57,7 @@ class MessageListApi(Resource):
 
         try:
             return MessageService.pagination_by_first_id(
-                app_model, end_user, args["conversation_id"], args["first_id"], args["limit"]
+                app_model, account, args["conversation_id"], args["first_id"], args["limit"]
             )
         except services.errors.conversation.ConversationNotExistsError:
             raise NotFound("Conversation Not Exists.")

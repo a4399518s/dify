@@ -89,11 +89,13 @@ class CompletionStopApi(WebApiResource):
 
 
 class ChatApi(WebApiResource):
-    def post(self, app_model, end_user):
+    def post(self, app_model, account):
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
 
+        # logging.info(f"xxxxxxxxxxxxx ChatApi vcvvvvvvvvv {type(account)}")
+        
         parser = reqparse.RequestParser()
         parser.add_argument("inputs", type=dict, required=True, location="json")
         parser.add_argument("query", type=str, required=True, location="json")
@@ -110,7 +112,7 @@ class ChatApi(WebApiResource):
 
         try:
             response = AppGenerateService.generate(
-                app_model=app_model, user=end_user, args=args, invoke_from=InvokeFrom.WEB_APP, streaming=streaming
+                app_model=app_model, user=account, args=args, invoke_from=InvokeFrom.WEB_APP, streaming=streaming,from_source="api"
             )
 
             return helper.compact_generate_response(response)

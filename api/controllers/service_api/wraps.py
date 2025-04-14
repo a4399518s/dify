@@ -1,3 +1,4 @@
+import logging
 import time
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
@@ -42,7 +43,7 @@ def validate_app_token(view: Optional[Callable] = None, *, fetch_user_arg: Optio
         @wraps(view_func)
         def decorated_view(*args, **kwargs):
             api_token = validate_and_get_api_token("app")
-
+            # logging.info(f"xxxxxxxxxxxxx User ID: {user_id}")
             app_model = db.session.query(App).filter(App.id == api_token.app_id).first()
             if not app_model:
                 raise Forbidden("The app no longer exists.")
@@ -77,8 +78,10 @@ def validate_app_token(view: Optional[Callable] = None, *, fetch_user_arg: Optio
 
                 if user_id:
                     user_id = str(user_id)
-
-                kwargs["end_user"] = create_or_update_end_user_for_user_id(app_model, user_id)
+                user_id = api_token.user_id
+                # kwargs["end_user"] = create_or_update_end_user_for_user_id(app_model, user_id)
+                # logging.info(f"xxxxxxxxxxxxx User ID: {user_id}")
+                kwargs["account"] = db.session.query(Account).filter(Account.id == user_id).first()
 
             return view_func(*args, **kwargs)
 
@@ -257,7 +260,7 @@ def validate_and_get_api_token(scope: str | None = None):
     return api_token
 
 
-def create_or_update_end_user_for_user_id(app_model: App, user_id: Optional[str] = None) -> EndUser:
+def create_or_update_end_user_for_user_id(app_model: App, user_id: Optional[str] = None) -> Account:
     """
     Create or update session terminal based on user ID.
     """

@@ -175,7 +175,7 @@ class WorkflowCycleManage:
             .filter(WorkflowNodeExecution.workflow_run_id == workflow_run.id)
             .scalar()
         )
-        logging.info(f"xxxxxxxxxxx total_user_point: {total_user_point} 11111{workflow_run.id}  user_id: {workflow_run.inputs_dict.get("sys.user_id")}")
+        # logging.info(f"xxxxxxxxxxx total_user_point: {total_user_point} {workflow_run.id}  user_id: {workflow_run.inputs_dict.get("sys.user_id")}")
         ## 根据最终结果计算用户余额。
         app = session.query(App).filter(App.id == workflow_run.app_id).one_or_none()
         stmt = (

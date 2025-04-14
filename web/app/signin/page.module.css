@@ -5,6 +5,9 @@
 .googleIcon {
   background: center/contain url('./assets/google.svg');
 }
+.wxIcon {
+  background: center/contain url('./assets/wx.svg');
+}
 
 .background {
   background-image: url('./assets/background.png');

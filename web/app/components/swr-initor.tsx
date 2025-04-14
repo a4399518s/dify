@@ -56,10 +56,16 @@ const SwrInitor = ({
           refreshToken && localStorage.setItem('refresh_token', refreshToken)
           router.replace(pathname)
         }
-
         setInit(true)
-      }
-      catch (error) {
+        const sharedToken = localStorage.getItem("sharedToken");
+        if (sharedToken) {
+          localStorage.removeItem("sharedToken");
+          location.href = `/chat/${sharedToken}`;
+          // router.replace(`/chat/${sharedToken}`);
+          return;
+        }
+      }catch (error) {
+        debugger
         router.replace('/signin')
       }
     })()

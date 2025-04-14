@@ -25,6 +25,8 @@ import {
   del as consoleDel, get as consoleGet, patch as consolePatch, post as consolePost,
   delPublic as del, getPublic as get, patchPublic as patch, postPublic as post, ssePost,
 } from './base'
+
+import { getAccessToken } from './fetch'
 import type { FeedbackType } from '@/app/components/base/chat/chat/type'
 import type {
   AppConversationData,
@@ -264,6 +266,14 @@ export const textToAudioStream = (url: string, isPublicAPI: boolean, header: { c
 
 export const fetchAccessToken = async (appCode: string) => {
   const headers = new Headers()
-  headers.append('X-App-Code', appCode)
+  const accessToken = getAccessToken(false)
+  debugger
+  if(accessToken==undefined || accessToken==""){
+    localStorage.setItem("sharedToken", appCode)
+    window.location.href = '/signin'
+    return;
+  }
+  headers.set("X-App-Token", accessToken)
+  headers.set("X-App-Code", appCode)
   return get('/passport', { headers }) as Promise<{ access_token: string }>
 }

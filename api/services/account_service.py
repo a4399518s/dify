@@ -334,9 +334,9 @@ class AccountService:
             else:
                 raise AttributeError(f"Invalid field: {field}")
         
-        logging.info(f"xxxxxxxxxxxxx commit start")
+        # logging.info(f"xxxxxxxxxxxxx commit start")
         db.session.commit()
-        logging.info(f"xxxxxxxxxxxxx commit end")
+        # logging.info(f"xxxxxxxxxxxxx commit end")
         return account
 
     @staticmethod

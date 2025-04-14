@@ -366,7 +366,7 @@ class DraftWorkflowRunApi(Resource):
         result = session.execute(stmt)
         session.commit()
 
-        logger.info(f"xxxxxxxxxxx result: {result.rowcount}")
+        # logger.info(f"xxxxxxxxxxx result: {result.rowcount}")
         if result.rowcount == 0:
             # If the update did not affect any rows, it means the user does not have enough points
             # to create a workflow.

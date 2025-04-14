@@ -7,7 +7,7 @@ from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 from controllers.web.error import WebSSOAuthRequiredError
 from extensions.ext_database import db
 from libs.passport import PassportService
-from models.model import App, EndUser, Site
+from models.model import App, EndUser, Site, Account
 from services.enterprise.enterprise_service import EnterpriseService
 from services.feature_service import FeatureService
 
@@ -16,9 +16,9 @@ def validate_jwt_token(view=None):
     def decorator(view):
         @wraps(view)
         def decorated(*args, **kwargs):
-            app_model, end_user = decode_jwt_token()
+            app_model, account = decode_jwt_token()
 
-            return view(app_model, end_user, *args, **kwargs)
+            return view(app_model, account, *args, **kwargs)
 
         return decorated
 
@@ -53,13 +53,13 @@ def decode_jwt_token():
             raise BadRequest("Site URL is no longer valid.")
         if app_model.enable_site is False:
             raise BadRequest("Site is disabled.")
-        end_user = db.session.query(EndUser).filter(EndUser.id == decoded["end_user_id"]).first()
-        if not end_user:
+        account = db.session.query(Account).filter(Account.id == decoded["user_id"]).first()
+        if not account:
             raise NotFound()
 
         _validate_web_sso_token(decoded, system_features, app_code)
 
-        return app_model, end_user
+        return app_model, account
     except Unauthorized as e:
         if system_features.sso_enforced_for_web:
             app_web_sso_enabled = EnterpriseService.get_app_web_sso_enabled(app_code).get("enabled", False)

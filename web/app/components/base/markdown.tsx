@@ -255,8 +255,8 @@ export function Markdown(props: { content: string; className?: string; customDis
           RemarkBreaks,
         ]}
         rehypePlugins={[
-          RehypeKatex,
           RehypeRaw as any,
+          RehypeKatex,
           // The Rehype plug-in is used to remove the ref attribute of an element
           () => {
             return (tree) => {
@@ -276,7 +276,7 @@ export function Markdown(props: { content: string; className?: string; customDis
             }
           },
         ]}
-        disallowedElements={['iframe', 'head', 'html', 'meta', 'link', 'style', 'body', ...(props.customDisallowedElements || [])]}
+        // disallowedElements={['iframe', 'head', 'html', 'meta', 'link', 'style', 'body', ...(props.customDisallowedElements || [])]}
         components={{
           code: CodeBlock,
           img: Img,
