@@ -113,6 +113,9 @@ class WxCallbackMessage(Resource):
         msg = parse_message(request_data)
         logging.info(f"xxxxxxxxxxx WxCallbackMessage: {msg.type}")
         openid = request.args.get('openid')
+        if msg.type == 'event' :
+            logging.info(f"xxxxxxxxxxx WxCallbackMessage: {msg.event}")
+            
         if msg.type == 'event' and msg.event == 'click' and msg.key == 'MY_POINT':
             account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.open_id == openid).one_or_none()
             if account_integrates is None:
