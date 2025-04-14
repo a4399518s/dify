@@ -89,8 +89,8 @@ class WxCallbackMessage(Resource):
                     "sub_button":[
                         {
                             "type":"view",
-                            "name":"测试流程",
-                            "url":"https://www.baidu.com"
+                            "name":"小红书起号",
+                            "url":"https://agent.hctalent.cn/chat/rprpslItIapHedAt"
                         }
                     ]
                 },
