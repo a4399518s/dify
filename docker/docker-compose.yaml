@@ -556,7 +556,7 @@ services:
       - /opt/project/github/dify:/data/project/github/dify
     working_dir: /data/project/github/dify/web
     # command: pnpm run dev
-    command: pnpm install --registry=https://registry.npmmirror.com && pnpm run build && pnpm start
+    command: pnpm start
     ports:
       - 3000:3000
 
