@@ -115,7 +115,14 @@ class WxCallbackMessage(Resource):
         openid = request.args.get('openid')
         if msg.type == 'event' :
             logging.info(f"xxxxxxxxxxx WxCallbackMessage: {msg.event}")
-            
+            if msg.event == 'subscribe':
+                reply = TextReply(content=f'欢迎关注美数合', message=msg)
+                # 转换成 XML
+                xml = reply.render()
+                return Response(xml, mimetype='text/plain')
+            if msg.event == 'unsubscribe':
+                return Response("", mimetype='text/plain')
+                
         if msg.type == 'event' and msg.event == 'click' and msg.key == 'MY_POINT':
             account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.open_id == openid).one_or_none()
             if account_integrates is None:
