@@ -31,6 +31,7 @@ const NormalForm = () => {
   const [workspaceName, setWorkSpaceName] = useState('')
 
   const isInviteLink = Boolean(invite_token && invite_token !== 'null')
+  const isWx = /micromessenger/.test(navigator.userAgent.toLowerCase())
 
   const init = useCallback(async () => {
     try {
@@ -145,7 +146,7 @@ const NormalForm = () => {
             {systemFeatures.sso_enforced_for_signin && <div className='w-full'>
               <SSOAuth protocol={systemFeatures.sso_enforced_for_signin_protocol} />
             </div>}
-            {<div className='w-full'>
+            {isWx && <div className='w-full'>
               <WxAuth />
             </div>}
           </div>
