@@ -1,3 +1,5 @@
+import json
+import logging
 import urllib.parse
 from dataclasses import dataclass
 from typing import Optional
@@ -131,3 +133,49 @@ class GoogleOAuth(OAuth):
 
     def _transform_user_info(self, raw_info: dict) -> OAuthUserInfo:
         return OAuthUserInfo(id=str(raw_info["sub"]), name="", email=raw_info["email"])
+
+
+class WxOAuth(OAuth):
+    _AUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize"
+    _TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token"
+    _USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo"
+
+    def get_authorization_url(self, tenant_names: Optional[str] = None):
+        params = {
+            "appid": "wxd16fa5d21589fabd",
+            "response_type": "code",
+            "redirect_uri": self.redirect_uri,
+            "scope": "snsapi_userinfo",
+        }
+        if tenant_names:
+            params["state"] = tenant_names
+        return f"{self._AUTH_URL}?{urllib.parse.urlencode(params)}"
+
+    def get_access_token(self, code: str):
+        data = {
+            "appid": "wxd16fa5d21589fabd",
+            "secret": "72aabbac34818a50ad7adb114ee9122b",
+            "code": code,
+            "grant_type": "authorization_code",
+            "redirect_uri": self.redirect_uri,
+        }
+        headers = {"Accept": "application/json"}
+        logging.info(f"xxxxxxxxxxx OAuthCallback: {self._TOKEN_URL}")
+        response = requests.post(self._TOKEN_URL, data=data, headers=headers)
+
+        response_json = response.json()
+        access_token = response_json.get("access_token")
+
+        if not access_token:
+            raise ValueError(f"Error in Google OAuth: {response_json}")
+
+        return access_token
+
+    def get_raw_user_info(self, token: str):
+        response = requests.get(f"{self._USER_INFO_URL}?access_token={token}&openid=wxd16fa5d21589fabd&lang=zh_CN")
+        response.raise_for_status()
+        return response.json()
+
+    def _transform_user_info(self, raw_info: dict) -> OAuthUserInfo:
+        logging.info(f"xxxxxxxxxxx OAuthCallback _transform_user_info: {json.dumps(raw_info)}")
+        return OAuthUserInfo(id=str(raw_info["openid"]), name=raw_info["nickname"], email=f"{str(raw_info["openid"])}@wx.qq.com")

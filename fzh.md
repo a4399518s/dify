@@ -53,3 +53,4 @@ kubeadm join kubeapi.hctalent.cn:6443 --token 88sfrt.9v8j36zvax03rg47 \
     --control-plane --certificate-key c7df8b86018df79e34f7604ce080792f44af5ac021992dff5c54e33cc4881dd8
 
 kubectl describe pod -n kube-flannel kube-flannel-ds-rjf8x
+http://192.168.31.213/chat/pEFDPVLjBuoUwCds

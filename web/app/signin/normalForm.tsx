@@ -8,6 +8,7 @@ import MailAndCodeAuth from './components/mail-and-code-auth'
 import MailAndPasswordAuth from './components/mail-and-password-auth'
 import SocialAuth from './components/social-auth'
 import SSOAuth from './components/sso-auth'
+import WxAuth from './components/wx-auth'
 import cn from '@/utils/classnames'
 import { getSystemFeatures, invitationCheck } from '@/service/common'
 import { LicenseStatus, defaultSystemFeatures } from '@/types/feature'
@@ -140,9 +141,12 @@ const NormalForm = () => {
           </div>}
         <div className="bg-white">
           <div className="mt-6 flex flex-col gap-3">
-            {systemFeatures.enable_social_oauth_login && <SocialAuth />}
+            {systemFeatures.enable_social_oauth_login && <SocialAuth />} 
             {systemFeatures.sso_enforced_for_signin && <div className='w-full'>
               <SSOAuth protocol={systemFeatures.sso_enforced_for_signin_protocol} />
+            </div>}
+            {<div className='w-full'>
+              <WxAuth />
             </div>}
           </div>
 

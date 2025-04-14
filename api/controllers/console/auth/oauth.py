@@ -1,5 +1,7 @@
 import logging
 from datetime import UTC, datetime
+import random
+import string
 from typing import Optional
 
 import requests
@@ -14,9 +16,9 @@ from constants.languages import languages
 from events.tenant_event import tenant_was_created
 from extensions.ext_database import db
 from libs.helper import extract_remote_ip
-from libs.oauth import GitHubOAuth, GoogleOAuth, OAuthUserInfo
+from libs.oauth import GitHubOAuth, GoogleOAuth, OAuthUserInfo, WxOAuth
 from models import Account
-from models.account import AccountStatus
+from models.account import AccountStatus, Tenant
 from services.account_service import AccountService, RegisterService, TenantService
 from services.errors.account import AccountNotFoundError, AccountRegisterError
 from services.errors.workspace import WorkSpaceNotAllowedCreateError, WorkSpaceNotFoundError
@@ -44,20 +46,27 @@ def get_oauth_providers():
                 redirect_uri=dify_config.CONSOLE_API_URL + "/console/api/oauth/authorize/google",
             )
 
-        OAUTH_PROVIDERS = {"github": github_oauth, "google": google_oauth}
+        wx_oauth = WxOAuth(
+            client_id="wxd16fa5d21589fabd",
+            client_secret="72aabbac34818a50ad7adb114ee9122b",
+            # redirect_uri=dify_config.CONSOLE_API_URL + "/console/api/oauth/authorize/wx",
+            redirect_uri="http://agent.hctalent.cn/console/api/oauth/authorize/wx",
+        )
+
+        OAUTH_PROVIDERS = {"github": github_oauth, "google": google_oauth, "wx": wx_oauth}
         return OAUTH_PROVIDERS
 
 
 class OAuthLogin(Resource):
     def get(self, provider: str):
-        invite_token = request.args.get("invite_token") or None
+        tenant_names = request.args.get("tenant_names") or None
         OAUTH_PROVIDERS = get_oauth_providers()
         with current_app.app_context():
             oauth_provider = OAUTH_PROVIDERS.get(provider)
         if not oauth_provider:
             return {"error": "Invalid provider"}, 400
 
-        auth_url = oauth_provider.get_authorization_url(invite_token=invite_token)
+        auth_url = oauth_provider.get_authorization_url(tenant_names=tenant_names)
         return redirect(auth_url)
 
 
@@ -68,12 +77,9 @@ class OAuthCallback(Resource):
             oauth_provider = OAUTH_PROVIDERS.get(provider)
         if not oauth_provider:
             return {"error": "Invalid provider"}, 400
-
         code = request.args.get("code")
         state = request.args.get("state")
-        invite_token = None
-        if state:
-            invite_token = state
+        logging.info(f"xxxxxxxxxxx OAuthCallback: {oauth_provider} {code} {state}")
 
         try:
             token = oauth_provider.get_access_token(code)
@@ -83,17 +89,8 @@ class OAuthCallback(Resource):
             logging.exception(f"An error occurred during the OAuth process with {provider}: {error_text}")
             return {"error": "OAuth process failed"}, 400
 
-        if invite_token and RegisterService.is_valid_invite_token(invite_token):
-            invitation = RegisterService._get_invitation_by_token(token=invite_token)
-            if invitation:
-                invitation_email = invitation.get("email", None)
-                if invitation_email != user_info.email:
-                    return redirect(f"{dify_config.CONSOLE_WEB_URL}/signin?message=Invalid invitation token.")
-
-            return redirect(f"{dify_config.CONSOLE_WEB_URL}/signin/invite-settings?invite_token={invite_token}")
-
         try:
-            account = _generate_account(provider, user_info)
+            account = _generate_account(provider, user_info,state)
         except AccountNotFoundError:
             return redirect(f"{dify_config.CONSOLE_WEB_URL}/signin?message=Account not found.")
         except (WorkSpaceNotFoundError, WorkSpaceNotAllowedCreateError):
@@ -143,29 +140,29 @@ def _get_account_by_openid_or_email(provider: str, user_info: OAuthUserInfo) -> 
     return account
 
 
-def _generate_account(provider: str, user_info: OAuthUserInfo):
+def _generate_account(provider: str, user_info: OAuthUserInfo,tenant_names: str = "") -> Account:
     # Get account by openid or email.
     account = _get_account_by_openid_or_email(provider, user_info)
-
-    if account:
-        tenant = TenantService.get_join_tenants(account)
-        if not tenant:
-            if not FeatureService.get_system_features().is_allow_create_workspace:
-                raise WorkSpaceNotAllowedCreateError()
-            else:
-                tenant = TenantService.create_tenant(f"{account.name}'s Workspace")
-                TenantService.create_tenant_member(tenant, account, role="owner")
-                account.current_tenant = tenant
-                tenant_was_created.send(tenant)
-
     if not account:
-        if not FeatureService.get_system_features().is_allow_register:
-            raise AccountNotFoundError()
-        account_name = user_info.name or "美数合"
-        account = RegisterService.register(
-            email=user_info.email, name=account_name, password=None, open_id=user_info.id, provider=provider
-        )
-
+        # if not FeatureService.get_system_features().is_allow_register:
+        #     raise AccountNotFoundError()
+        # account_name = user_info.name or "美数合"
+        # account = RegisterService.register(
+        #     email=user_info.email, name=account_name, password=None, open_id=user_info.id, provider=provider
+        # )
+        account = AccountService.create_account(user_info.email, user_info.name,''.join(random.sample(string.ascii_letters + string.digits, 8)))
+        tenant = Tenant.query.filter(Tenant.name == "default").one_or_404();
+        logging.info(f"tenant:{tenant}")
+        TenantService.create_tenant_member(tenant,account,role="normal");
+        TenantService.switch_tenant(account,tenant.id)
+        if(tenant_names!=""):
+            tenant_names = tenant_names.split(",")
+            for tenant_name in tenant_names:
+                tenant = Tenant.query.filter(Tenant.name == tenant_name).one_or_none();
+                if tenant is None:
+                    continue
+                TenantService.create_tenant_member(tenant,account,role="normal")
+                TenantService.switch_tenant(account,tenant.id)
         # Set interface language
         preferred_lang = request.accept_languages.best_match(languages)
         if preferred_lang and preferred_lang in languages:
