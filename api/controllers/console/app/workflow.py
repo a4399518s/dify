@@ -181,9 +181,8 @@ class AdvancedChatDraftWorkflowRunApi(Resource):
             raise InvokeRateLimitHttpError(ex.description)
         except ValueError as e:
             raise e
-        except Exception:
-            logging.exception("internal server error.")
-            raise InternalServerError()
+        except Exception as e:
+            raise InvokeRateLimitHttpError(e.description)
 
 
 class AdvancedChatDraftRunIterationNodeApi(Resource):
@@ -354,23 +353,6 @@ class DraftWorkflowRunApi(Resource):
         parser.add_argument("inputs", type=dict, required=True, nullable=False, location="json")
         parser.add_argument("files", type=list, required=False, location="json")
         args = parser.parse_args()
-
-        session: Session = db.session
-        stmt = (
-            update(Account)
-            .where(Account.id == current_user.id)
-            .where(Account.point - app_model.min_point >= 0)
-            .values(point=Account.point - app_model.min_point)
-        )
-
-        result = session.execute(stmt)
-        session.commit()
-
-        # logger.info(f"xxxxxxxxxxx result: {result.rowcount}")
-        if result.rowcount == 0:
-            # If the update did not affect any rows, it means the user does not have enough points
-            # to create a workflow.
-            raise InsufficientBalanceError()
             
         try:
             response = AppGenerateService.generate(

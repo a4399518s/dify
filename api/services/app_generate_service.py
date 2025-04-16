@@ -17,7 +17,13 @@ from models.workflow import Workflow
 from services.billing_service import BillingService
 from services.errors.llm import InvokeRateLimitError
 from services.workflow_service import WorkflowService
+from extensions.ext_database import db
+from sqlalchemy.orm import Session
+from sqlalchemy import update
 
+from controllers.console.app.error import (
+    InsufficientBalanceError
+)
 
 class AppGenerateService:
     system_rate_limiter = RateLimiter("app_daily_rate_limiter", dify_config.APP_DAILY_RATE_LIMIT, 86400)
@@ -53,6 +59,24 @@ class AppGenerateService:
                     )
                 cls.system_rate_limiter.increment_rate_limit(app_model.tenant_id)
 
+        session: Session = db.session
+        stmt = (
+            update(Account)
+            .where(Account.id == user.id)
+            .where(Account.point - app_model.min_point >= 0)
+            .values(point=Account.point - app_model.min_point)
+        )
+
+        result = session.execute(stmt)
+        session.commit()
+
+        # logger.info(f"xxxxxxxxxxx result: {result.rowcount}")
+        if result.rowcount == 0:
+            # If the update did not affect any rows, it means the user does not have enough points
+            # to create a workflow.
+            raise InsufficientBalanceError()
+        
+        
         # app level rate limiter
         max_active_request = AppGenerateService._get_max_active_requests(app_model)
         rate_limit = RateLimit(app_model.id, max_active_request)

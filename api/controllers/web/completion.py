@@ -136,8 +136,7 @@ class ChatApi(WebApiResource):
         except ValueError as e:
             raise e
         except Exception as e:
-            logging.exception("internal server error.")
-            raise InternalServerError()
+            raise CompletionRequestError(e.description)
 
 
 class ChatStopApi(WebApiResource):
