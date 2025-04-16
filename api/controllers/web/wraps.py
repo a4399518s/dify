@@ -1,4 +1,5 @@
 from functools import wraps
+import logging
 
 from flask import request
 from flask_restful import Resource  # type: ignore
@@ -33,28 +34,35 @@ def decode_jwt_token():
     try:
         auth_header = request.headers.get("Authorization")
         if auth_header is None:
+            logging.info("xxxxxxxxxxx Authorization header is missing. None")
             raise Unauthorized("Authorization header is missing.")
 
         if " " not in auth_header:
+            logging.info("xxxxxxxxxxx Authorization header is missing. \"\"")
             raise Unauthorized("Invalid Authorization header format. Expected 'Bearer <api-key>' format.")
 
         auth_scheme, tk = auth_header.split(None, 1)
         auth_scheme = auth_scheme.lower()
 
         if auth_scheme != "bearer":
+            logging.info("xxxxxxxxxxx Authorization header is missing. auth_scheme != \"bearer\"")
             raise Unauthorized("Invalid Authorization header format. Expected 'Bearer <api-key>' format.")
         decoded = PassportService().verify(tk)
         app_code = decoded.get("app_code")
         app_model = db.session.query(App).filter(App.id == decoded["app_id"]).first()
         site = db.session.query(Site).filter(Site.code == app_code).first()
         if not app_model:
+            logging.info("xxxxxxxxxxx  not app_model")
             raise NotFound()
         if not app_code or not site:
+            logging.info("xxxxxxxxxxx  not app_code or not site")
             raise BadRequest("Site URL is no longer valid.")
         if app_model.enable_site is False:
+            logging.info("xxxxxxxxxxx app_model.enable_site ")
             raise BadRequest("Site is disabled.")
         account = db.session.query(Account).filter(Account.id == decoded["user_id"]).first()
         if not account:
+            logging.info("not account")
             raise NotFound()
 
         _validate_web_sso_token(decoded, system_features, app_code)
