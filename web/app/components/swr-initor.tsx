@@ -48,8 +48,15 @@ const SwrInitor = ({
           return
         }
         if (!((consoleToken && refreshToken) || (consoleTokenFromLocalStorage && refreshTokenFromLocalStorage))) {
+          localStorage.setItem('signin_path', location.pathname)
           router.replace('/signin')
           return
+        }else{
+          const signin_path = localStorage.getItem('signin_path')
+          if (signin_path){
+            localStorage.removeItem('signin_path')
+            location.href = signin_path;
+          }          
         }
         if (searchParams.has('access_token') || searchParams.has('refresh_token')) {
           consoleToken && localStorage.setItem('console_token', consoleToken)

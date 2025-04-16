@@ -177,5 +177,5 @@ class WxOAuth(OAuth):
         return response.json()
 
     def _transform_user_info(self, raw_info: dict) -> OAuthUserInfo:
-        logging.info(f"xxxxxxxxxxx OAuthCallback _transform_user_info: {json.dumps(raw_info)}")
-        return OAuthUserInfo(id=str(raw_info["openid"]), name=raw_info["nickname"], email=f"{str(raw_info["openid"])}@wx.qq.com")
+        logging.info(f"xxxxxxxxxxx OAuthCallback _transform_user_info: {json.dumps(raw_info)} {raw_info["nickname"].encode("latin1").decode("utf-8")}")
+        return OAuthUserInfo(id=str(raw_info["openid"]), name=raw_info["nickname"].encode("latin1").decode("utf-8"), email=f"{str(raw_info["openid"])}@wx.qq.com")

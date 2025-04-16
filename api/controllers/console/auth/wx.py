@@ -91,6 +91,11 @@ class WxCallbackMessage(Resource):
                             "type":"view",
                             "name":"小红书起号",
                             "url":"https://agent.hctalent.cn/chat/rprpslItIapHedAt"
+                        },
+                        {
+                            "type":"view",
+                            "name":"数字人成片脚本",
+                            "url":"https://agent.hctalent.cn/chat/oYinVkbjdxiV74R5"
                         }
                     ]
                 },
@@ -98,9 +103,9 @@ class WxCallbackMessage(Resource):
                     "name":"我的",
                     "sub_button":[
                         {
-                            "type":"click",
-                            "name":"我的积分1111",
-                            "key":"MY_POINT"
+                            "type":"view",
+                            "name":"我的信息",
+                            "url":"http://agent.hctalent.cn/my"
                         }
                     ]
                 }
@@ -123,7 +128,7 @@ class WxCallbackMessage(Resource):
             if msg.event == 'unsubscribe':
                 return Response("", mimetype='text/plain')
                 
-        if msg.type == 'event' and msg.event == 'click' and msg.key == 'MY_POINT':
+        if msg.type == 'event' and msg.event == 'click' and msg.key == 'MY_INFO':
             account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.open_id == openid).one_or_none()
             if account_integrates is None:
                 reply = TextReply(content='您尚未登陆。', message=msg)
@@ -137,7 +142,7 @@ class WxCallbackMessage(Resource):
                 xml = reply.render()
                 return Response(xml, mimetype='text/plain')
             
-            reply = TextReply(content=f'您的积分:{account.point}', message=msg)
+            reply = TextReply(content=f'您的积分:{account.point}\n您的ID:{account.id}\n您的open_id:{openid}\n', message=msg)
             # 转换成 XML
             xml = reply.render()
             return Response(xml, mimetype='text/plain')

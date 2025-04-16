@@ -26,6 +26,7 @@ from models import AccountIntegrate, InvitationCode
 from services.account_service import AccountService
 from services.billing_service import BillingService
 from services.errors.account import CurrentPasswordIncorrectError as ServiceCurrentPasswordIncorrectError
+from libs.mingdao import worksheetGetFilterRows,filter
 
 
 class AccountInitApi(Resource):
@@ -85,8 +86,30 @@ class AccountProfileApi(Resource):
     @marshal_with(account_fields)
     @enterprise_license_required
     def get(self):
-        logging.info("current_user")
         return current_user
+
+
+class AccountAiInfoApi(Resource):
+    @setup_required
+    @login_required
+    @account_initialization_required
+    # @marshal_with(account_fields)
+    @enterprise_license_required
+    def get(self):
+        szrxx = None
+        szrsw = None
+        res = worksheetGetFilterRows("szrxx",[filter("dify_user_id",2,1,2,current_user.id)],1,10)
+        
+        logging.info(f"xxxxxxxxxxx result: {json.dumps(res)}")
+        if res["data"]["total"] > 0:
+            szrxx= res["data"]["rows"][0]
+        res = worksheetGetFilterRows("szrsw",[filter("dify_user_id",2,1,2,current_user.id)],1,10)
+        if res["data"]["total"] > 0:
+            szrsw= res["data"]["rows"][0]
+        return {
+            "szrxx": szrxx,
+            "szrsw": szrsw,
+        }
 
 
 class AccountNameApi(Resource):
@@ -299,6 +322,7 @@ class AccountDeleteUpdateFeedbackApi(Resource):
 # Register API resources
 api.add_resource(AccountInitApi, "/account/init")
 api.add_resource(AccountProfileApi, "/account/profile")
+api.add_resource(AccountAiInfoApi, "/account/ai-info")
 api.add_resource(AccountNameApi, "/account/name")
 api.add_resource(AccountAvatarApi, "/account/avatar")
 api.add_resource(AccountInterfaceLanguageApi, "/account/interface-language")
