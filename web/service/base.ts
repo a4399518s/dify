@@ -464,6 +464,13 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
     if (err === null)
       return resp
     const errResp: Response = err as any
+    if (errResp.status === 404) {
+      localStorage.removeItem('console_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('token')
+      globalThis.location.reload()
+      return Promise.reject(err)
+    }
     if (errResp.status === 401) {
       const [parseErr, errRespData] = await asyncRunSafe<ResponseError>(errResp.json())
       const loginUrl = `${globalThis.location.origin}/signin`
