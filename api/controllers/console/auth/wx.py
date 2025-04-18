@@ -189,7 +189,7 @@ class WxPushMessage(Resource):
             {
                 'thing1': {'value': 'AI视频'},
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
-                'thing3': {'value': "您的视频生成成功，点击查看详情"},
+                'thing3': {'value': "您的视频生成成功，请进入菜单查看"},
                 # 按照你的模板字段来填写
             },'https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5'
         )
