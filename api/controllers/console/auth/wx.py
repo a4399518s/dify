@@ -92,12 +92,12 @@ class WxCallbackMessage(Resource):
                         {
                             "type":"view",
                             "name":"小红书起号",
-                            "url":"https://agent.hctalent.cn/chat/rprpslItIapHedAt"
+                            "url":"https://agent.meishuhe.cn/chat/rprpslItIapHedAt"
                         },
                         {
                             "type":"view",
                             "name":"数字人成片脚本",
-                            "url":"https://agent.hctalent.cn/chat/oYinVkbjdxiV74R5"
+                            "url":"https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5"
                         }
                     ]
                 },
@@ -180,5 +180,24 @@ class WxConfigMessage(Resource):
             "openTagList": ["wx-open-subscribe"]
         }}
 
+class WxPushMessage(Resource):
+    def get(self):
+        userId = request.args.get('userId')
+        account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.account_id == userId).one_or_none()
+        if account_integrates is None:
+            return {"result": "error", "message": "用户不存在"}, 400
+        res = client.message.send_subscribe_message(
+            account_integrates.open_id,
+            'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM',
+            {
+                'thing1': {'value': 'AI视频'},
+                'thing2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
+                'thing3': {'value': "您的视频生成成功，点击查看详情"},
+                # 按照你的模板字段来填写
+            },'https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5'
+        )
+        logging.info(f"xxxxxxxxxxx WxCallbackMessage: {res}")
+
+api.add_resource(WxPushMessage, "/channel/wx/push-message")
 api.add_resource(WxCallbackMessage, "/channel/wx/callback")
 api.add_resource(WxConfigMessage, "/channel/wx/config")
