@@ -1,4 +1,5 @@
 from collections.abc import Generator, Mapping
+import logging
 from typing import Any, Union
 
 from openai._exceptions import RateLimitError
@@ -112,6 +113,8 @@ class AppGenerateService:
                 )
             elif app_model.mode == AppMode.ADVANCED_CHAT.value:
                 workflow = cls._get_workflow(app_model, invoke_from)
+                
+                logging.info(f"xxxxxxxxxxxxx ChatApi vcvvvvvvvvv from_source {from_source}")
                 return rate_limit.generate(
                     AdvancedChatAppGenerator.convert_to_event_stream(
                         AdvancedChatAppGenerator().generate(

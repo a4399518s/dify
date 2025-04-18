@@ -52,7 +52,7 @@ class ConversationListApi(WebApiResource):
                     last_id=args["last_id"],
                     limit=args["limit"],
                     invoke_from=InvokeFrom.WEB_APP,
-                    from_source="api",
+                    from_source="console",
                     pinned=pinned,
                     sort_by=args["sort_by"],
                 )
@@ -91,7 +91,7 @@ class ConversationRenameApi(WebApiResource):
         args = parser.parse_args()
 
         try:
-            return ConversationService.rename(app_model, conversation_id, account, args["name"], args["auto_generate"],"api")
+            return ConversationService.rename(app_model, conversation_id, account, args["name"], args["auto_generate"],"console")
         except ConversationNotExistsError:
             raise NotFound("Conversation Not Exists.")
 

@@ -94,7 +94,7 @@ class ChatApi(WebApiResource):
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:
             raise NotChatAppError()
 
-        # logging.info(f"xxxxxxxxxxxxx ChatApi vcvvvvvvvvv {type(account)}")
+        logging.info(f"xxxxxxxxxxxxx ChatApi vcvvvvvvvvv {type(account)}")
         
         parser = reqparse.RequestParser()
         parser.add_argument("inputs", type=dict, required=True, location="json")
@@ -107,12 +107,12 @@ class ChatApi(WebApiResource):
 
         args = parser.parse_args()
 
-        streaming = args["response_mode"] == "streaming"
+        # streaming = args["response_mode"] == "streaming"
         args["auto_generate_name"] = False
 
         try:
             response = AppGenerateService.generate(
-                app_model=app_model, user=account, args=args, invoke_from=InvokeFrom.WEB_APP, streaming=streaming,from_source="api"
+                app_model=app_model, user=account, args=args, invoke_from=InvokeFrom.EXPLORE, streaming=True,from_source="console"
             )
 
             return helper.compact_generate_response(response)
@@ -152,5 +152,5 @@ class ChatStopApi(WebApiResource):
 
 api.add_resource(CompletionApi, "/completion-messages")
 api.add_resource(CompletionStopApi, "/completion-messages/<string:task_id>/stop")
-api.add_resource(ChatApi, "/chat-messages")
+api.add_resource(ChatApi, "/chat-messages") 
 api.add_resource(ChatStopApi, "/chat-messages/<string:task_id>/stop")

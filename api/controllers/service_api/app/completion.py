@@ -97,7 +97,7 @@ class ChatApi(Resource):
     @validate_app_token(fetch_user_arg=FetchUserArg(fetch_from=WhereisUserArg.JSON, required=True))
     def post(self, app_model: App, end_user: EndUser):
         
-        # logging.info(f"xxxxxxxxxxxxx ChatApi")
+        logging.info(f"xxxxxxxxxxxxx ChatApi")
         
         app_mode = AppMode.value_of(app_model.mode)
         if app_mode not in {AppMode.CHAT, AppMode.AGENT_CHAT, AppMode.ADVANCED_CHAT}:

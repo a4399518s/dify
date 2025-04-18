@@ -1,6 +1,7 @@
 ```
 docker compose down
 docker compose up -d
+docker compose -f docker-compose.test.yaml up -d
 docker compose up -d --no-deps --build api
 -x "http://crash:202412231431@192.168.1.220:65534"
 cd /opt/project/github/dify/docker
@@ -8,6 +9,13 @@ export HTTPS_PROXY="http://crash:202412231431@192.168.1.220:65534"
 export HTTP_PROXY="http://crash:202412231431@192.168.1.220:65534"
 export http_proxy="http://crash:202412231431@192.168.1.220:65534"
 export https_proxy="http://crash:202412231431@192.168.1.220:65534"
+
+
+export HTTPS_PROXY="http://crash:202412231431@192.168.1.220:65534"
+export HTTP_PROXY="http://crash:202412231431@192.168.1.220:65534"
+export http_proxy="http://crash:202412231431@192.168.1.220:65534"
+export https_proxy="http://crash:202412231431@192.168.1.220:65534"
+
 unset HTTPS_PROXY
 unset HTTP_PROXY
 unset http_proxy

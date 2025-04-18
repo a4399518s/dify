@@ -11,7 +11,7 @@ import {
   atelierHeathDark,
   atelierHeathLight,
 } from 'react-syntax-highlighter/dist/esm/styles/hljs'
-import { Component, memo, useMemo, useRef, useState } from 'react'
+import { Component, memo, useMemo, useRef, useState,useEffect } from 'react'
 import { flow } from 'lodash-es'
 import ActionButton from '@/app/components/base/action-button'
 import CopyIcon from '@/app/components/base/copy-icon'

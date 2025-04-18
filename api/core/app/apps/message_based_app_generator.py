@@ -122,7 +122,7 @@ class MessageBasedAppGenerator(BaseAppGenerator):
         end_user_id = None
         account_id = None
         if application_generate_entity.invoke_from in {InvokeFrom.WEB_APP, InvokeFrom.SERVICE_API}:
-            from_source = "api"
+            from_source = "console"
             # end_user_id = application_generate_entity.user_id
             account_id = application_generate_entity.user_id
         else:

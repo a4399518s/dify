@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe Page</title>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+    <script>
+
+        function fetchData() {
+            fetch('/console/api/channel/wx/config?url='+location.href)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+              debugger
+              wx.ready(function () {
+                console.log("wx ready")
+              });
+              wx.error(function (res) {
+                console.log("wx err",res)
+              })
+              wx.config(data.data);
+            }).catch(error => {
+              console.error('There was a problem with the fetch operation:', error);
+            });
+        }
+
+        fetchData();
+
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <wx-open-subscribe template="TenvU22BA1jCp4YHfYEpRuESXYReQyDuhs4vbdWA99I" id="subscribe-btn">
+      <script type="text/wxtag-template" slot="style">
+        <style>
+          .subscribe-btn {
+            color: #fff;
+            background-color: #07c160;
+          }
+        </style>
+      </script>
+      <script type="text/wxtag-template">
+        <button class="subscribe-btn">
+          一次性模版消息订阅              
+        </button>
+      </script>
+    </wx-open-subscribe>
+    <script>
+      var btn = document.getElementById('subscribe-btn');
+      btn.addEventListener('success', function (e) {            
+        console.log('success', e.detail);
+      });   
+      btn.addEventListener('error',function (e) {             
+        console.log('fail', e.detail);
+      });
+    </script>
+</body>
+</html>

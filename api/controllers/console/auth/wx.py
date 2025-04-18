@@ -32,10 +32,12 @@ from services.feature_service import FeatureService
 from .. import api
 from wechatpy import WeChatClient,parse_message
 from wechatpy.replies import TextReply,EmptyReply
-
+import hashlib
 import requests
 
-client = WeChatClient('wxd16fa5d21589fabd', '72aabbac34818a50ad7adb114ee9122b')
+appId='wxd16fa5d21589fabd'
+appSecret='72aabbac34818a50ad7adb114ee9122b'
+client = WeChatClient(appId, appSecret)
 
 def ask_question(prompt: str, model: str = "qwq:latest", host: str = "http://ollama.fzh.cloud"):
     url = f"{host}/api/chat"
@@ -158,5 +160,25 @@ class WxCallbackMessage(Resource):
         xml = reply.render()
         return Response(xml, mimetype='text/plain')
     
+class WxConfigMessage(Resource):
+    def get(self):
+        url = request.args.get('url')
+        timestamp = int(datetime.now(UTC).timestamp())
+        nonce_str = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
+        jsapi_ticket = client.jsapi.get_jsapi_ticket()
+        signature = f'jsapi_ticket={jsapi_ticket}&noncestr={nonce_str}&timestamp={timestamp}&url={url}'
+        signature = hashlib.sha1(signature.encode('utf-8')).hexdigest()
+
+        return {
+            "result": "success", "data": {
+            "debug": False, 
+            "appId": appId,
+            "timestamp": timestamp,
+            "nonceStr": nonce_str,
+            "signature": signature,
+            "jsApiList": [],
+            "openTagList": ["wx-open-subscribe"]
+        }}
 
 api.add_resource(WxCallbackMessage, "/channel/wx/callback")
+api.add_resource(WxConfigMessage, "/channel/wx/config")
