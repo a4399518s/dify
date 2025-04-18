@@ -155,11 +155,7 @@ class WxCallbackMessage(Resource):
             t.start()
             return Response("", mimetype='text/plain')
             
-
-        reply = TextReply(content=f'暂未处理，请联系管理员。', message=msg)
-        # 转换成 XML
-        xml = reply.render()
-        return Response(xml, mimetype='text/plain')
+        return Response("", mimetype='text/plain')
     
 class WxConfigMessage(Resource):
     def get(self):
@@ -192,7 +188,7 @@ class WxPushMessage(Resource):
             'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM',
             {
                 'thing1': {'value': 'AI视频'},
-                'thing2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
+                'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
                 'thing3': {'value': "您的视频生成成功，点击查看详情"},
                 # 按照你的模板字段来填写
             },'https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5'
