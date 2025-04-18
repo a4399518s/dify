@@ -191,7 +191,7 @@ class WxPushMessage(Resource):
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
                 'thing3': {'value': "您的视频生成成功，请进入菜单查看"},
                 # 按照你的模板字段来填写
-            },'https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5'
+            },None,'https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5'
         )
         logging.info(f"xxxxxxxxxxx WxCallbackMessage: {res}")
 
