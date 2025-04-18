@@ -468,6 +468,7 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
       localStorage.removeItem('console_token')
       localStorage.removeItem('refresh_token')
       localStorage.removeItem('token')
+      localStorage.removeItem('conversationIdInfo')
       globalThis.location.reload()
       return Promise.reject(err)
     }
