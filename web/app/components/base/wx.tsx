@@ -46,10 +46,12 @@ export function WxSubscribeButton() {
           btn.addEventListener('success', (e: Event) => {
             const detail = (e as CustomEvent).detail;
             console.log('success', detail);
+            alert("订阅成功");
           });
           btn.addEventListener('error', (e: Event) => {
             const detail = (e as CustomEvent).detail;
             console.log('fail', detail);
+            alert("fail" + detail.errMsg);
           });
         }
       }, [])}
