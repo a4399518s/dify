@@ -6,7 +6,7 @@
     <title>Subscribe Page</title>
     <script src="//res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
     <script>
-
+        alert("开始")
         function fetchData() {
             fetch('/console/api/channel/wx/config?url='+location.href)
             .then(response => {
@@ -19,9 +19,10 @@
               debugger
               wx.ready(function () {
                 console.log("wx ready")
+                alert("成功")
               });
               wx.error(function (res) {
-                console.log("wx err",res)
+                alert("错误")
               })
               wx.config(data.data);
             }).catch(error => {
@@ -53,6 +54,7 @@
     </style>
 </head>
 <body>
+    <h1>Subscribe to Video Notifications</h1>
     <wx-open-subscribe template="daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM" id="subscribe-btn">
       <script type="text/wxtag-template" slot="style">
         <style>
@@ -64,7 +66,7 @@
       </script>
       <script type="text/wxtag-template">
         <button class="subscribe-btn">
-          一次性模版消息订阅              
+          订阅视频通知              
         </button>
       </script>
     </wx-open-subscribe>

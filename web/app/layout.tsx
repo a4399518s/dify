@@ -30,6 +30,10 @@ const LocaleLayout = async ({
   return (
     <html lang={locale ?? 'en'} className="h-full" suppressHydrationWarning>
       <head>
+        <script type="text/javascript"
+          src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"
+        />
+        <script type="text/javascript" src='/wx.js'></script>
         <meta name="theme-color" content="#FFFFFF" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
