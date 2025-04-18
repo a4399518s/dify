@@ -50,7 +50,7 @@ def get_oauth_providers():
             client_id="wxd16fa5d21589fabd",
             client_secret="72aabbac34818a50ad7adb114ee9122b",
             # redirect_uri=dify_config.CONSOLE_API_URL + "/console/api/oauth/authorize/wx",
-            redirect_uri="http://agent.hctalent.cn/console/api/oauth/authorize/wx",
+            redirect_uri="https://agent.meishuhe.cn/console/api/oauth/authorize/wx",
         )
 
         OAUTH_PROVIDERS = {"github": github_oauth, "google": google_oauth, "wx": wx_oauth}

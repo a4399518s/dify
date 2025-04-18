@@ -84,7 +84,7 @@ class WxCallbackMessage(Resource):
         # args = parser.parse_args()
         logging.info(f"xxxxxxxxxxx WxCallbackMessage: {echostr}")
 
-        client.menu.create({
+        res = client.menu.create({
             "button":[
                 {
                     "name":"AI",
@@ -97,7 +97,7 @@ class WxCallbackMessage(Resource):
                         {
                             "type":"view",
                             "name":"数字人成片脚本",
-                            "url":"https://agent.meishuhe.cn/chat/oYinVkbjdxiV74R5"
+                            "url":"https://agent.meishuhe.cn/chat/QVK5g3vYXvspTrNw"
                         }
                     ]
                 },
@@ -107,12 +107,13 @@ class WxCallbackMessage(Resource):
                         {
                             "type":"view",
                             "name":"我的信息",
-                            "url":"http://agent.hctalent.cn/my"
+                            "url":"http://agent.meishuhe.cn/my"
                         }
                     ]
                 }
             ]
         })
+        logging.info(f"xxxxxxxxxxx WxCallbackMessage:xxxxxx {res}")
         return Response(echostr, mimetype='text/plain')
     
     def post(self):
