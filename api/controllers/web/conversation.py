@@ -51,7 +51,7 @@ class ConversationListApi(WebApiResource):
                     user=account,
                     last_id=args["last_id"],
                     limit=args["limit"],
-                    invoke_from=InvokeFrom.WEB_APP,
+                    invoke_from=InvokeFrom.EXPLORE,
                     from_source="console",
                     pinned=pinned,
                     sort_by=args["sort_by"],
