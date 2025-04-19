@@ -456,6 +456,8 @@ services:
       https_proxy: "http://crash:202412231431@192.168.1.220:65534"
       NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
+      WEAVIATE_API_KEY: ${WEAVIATE_API_KEY:-WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih}
+      WEAVIATE_ENDPOINT: ${WEAVIATE_ENDPOINT:-http://weaviate:8080}
       SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
       SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
       PLUGIN_REMOTE_INSTALL_HOST: ${EXPOSE_PLUGIN_DEBUGGING_HOST:-plugin_daemon}
@@ -497,11 +499,13 @@ services:
       NO_PROXY: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       no_proxy: "db,redis,plugin_daemon,plugin_daemon:5003,sandbox,ssrf_proxy,ssrf_proxy:3128"
       SENTRY_DSN: ${API_SENTRY_DSN:-}
+      WEAVIATE_API_KEY: ${WEAVIATE_API_KEY:-WVF5YThaHlkYwhGUSmCRgsX3tD5ngdN8pkih}
+      WEAVIATE_ENDPOINT: ${WEAVIATE_ENDPOINT:-http://weaviate:8080}
       SENTRY_TRACES_SAMPLE_RATE: ${API_SENTRY_TRACES_SAMPLE_RATE:-1.0}
       SENTRY_PROFILES_SAMPLE_RATE: ${API_SENTRY_PROFILES_SAMPLE_RATE:-1.0}
       PLUGIN_MAX_PACKAGE_SIZE: ${PLUGIN_MAX_PACKAGE_SIZE:-52428800}
       INNER_API_KEY_FOR_PLUGIN: ${PLUGIN_DIFY_INNER_API_KEY:-QaHbTe77CtuXmsfyhR7+vRjI/+XbV1AaFy691iy+kGDv2Jvy0/eAh8Y1}
-    depends_on:
+    depends_on:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
       - db
       - redis
     volumes:

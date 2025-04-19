@@ -44,22 +44,22 @@ class FilePreviewApi(Resource):
         file_id = str(file_id)
 
         parser = reqparse.RequestParser()
-        parser.add_argument("timestamp", type=str, required=True, location="args")
-        parser.add_argument("nonce", type=str, required=True, location="args")
-        parser.add_argument("sign", type=str, required=True, location="args")
-        parser.add_argument("as_attachment", type=bool, required=False, default=False, location="args")
+        # parser.add_argument("timestamp", type=str, required=True, location="args")
+        # parser.add_argument("nonce", type=str, required=True, location="args")
+        # parser.add_argument("sign", type=str, required=True, location="args")
+        # parser.add_argument("as_attachment", type=bool, required=False, default=False, location="args")
 
         args = parser.parse_args()
 
-        if not args["timestamp"] or not args["nonce"] or not args["sign"]:
-            return {"content": "Invalid request."}, 400
+        # if not args["timestamp"] or not args["nonce"] or not args["sign"]:
+        #     return {"content": "Invalid request."}, 400
 
         try:
             generator, upload_file = FileService.get_file_generator_by_file_id(
                 file_id=file_id,
-                timestamp=args["timestamp"],
-                nonce=args["nonce"],
-                sign=args["sign"],
+                timestamp=None,
+                nonce=None,
+                sign=None,
             )
         except services.errors.file.UnsupportedFileTypeError:
             raise UnsupportedFileTypeError()
@@ -72,9 +72,9 @@ class FilePreviewApi(Resource):
         )
         if upload_file.size > 0:
             response.headers["Content-Length"] = str(upload_file.size)
-        if args["as_attachment"]:
-            encoded_filename = quote(upload_file.name)
-            response.headers["Content-Disposition"] = f"attachment; filename*=UTF-8''{encoded_filename}"
+        # if args["as_attachment"]:
+        encoded_filename = quote(upload_file.name)
+        response.headers["Content-Disposition"] = f"attachment; filename*=UTF-8''{encoded_filename}"
         response.headers["Content-Type"] = "application/octet-stream"
 
         return response
