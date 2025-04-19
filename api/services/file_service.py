@@ -1,5 +1,7 @@
 import datetime
 import hashlib
+import json
+import logging
 import uuid
 from typing import Any, Literal, Union
 
@@ -17,7 +19,7 @@ from core.file import helpers as file_helpers
 from core.rag.extractor.extract_processor import ExtractProcessor
 from extensions.ext_database import db
 from extensions.ext_storage import storage
-from models.account import Account
+from models.account import Account, TenantAccountJoin
 from models.enums import CreatedByRole
 from models.model import EndUser, UploadFile
 
@@ -56,7 +58,13 @@ class FileService:
         file_uuid = str(uuid.uuid4())
 
         if isinstance(user, Account):
-            current_tenant_id = user.current_tenant_id
+            try:
+                # account
+                tenantAccountJoin = db.session.query(TenantAccountJoin).filter(TenantAccountJoin.account_id == user.id ,TenantAccountJoin.current == True).one_or_none()
+                current_tenant_id = tenantAccountJoin.tenant_id
+            except AttributeError:
+                logging.info(f"xxxxxxxxxxx current_tenant_id content: {json.dumps(user)}")
+                current_tenant_id = user.tenant_id
         else:
             # end_user
             current_tenant_id = user.tenant_id

@@ -471,8 +471,8 @@ services:
       - /data/project/github/dify/docker/volumes/app/storage:/data/project/github/dify/api/storage
       - /data/project/github/dify:/data/project/github/dify
     working_dir: /data/project/github/dify/api
-    # command: poetry run flask --debug run --host 0.0.0.0 --port=5001
-    command: poetry run flask run --host 0.0.0.0 --port=5001
+    command: poetry run flask --debug run --host 0.0.0.0 --port=5001
+    # command: poetry run flask run --host 0.0.0.0 --port=5001
     networks:
       - ssrf_proxy_network
       - default
