@@ -1,3 +1,4 @@
+
 from flask_restful import fields, marshal_with  # type: ignore
 from werkzeug.exceptions import Forbidden
 
@@ -6,7 +7,7 @@ from controllers.web import api
 from controllers.web.wraps import WebApiResource
 from extensions.ext_database import db
 from libs.helper import AppIconUrlField
-from models.account import TenantStatus
+from models.account import TenantAccountJoin, TenantStatus
 from models.model import Site
 from services.feature_service import FeatureService
 
@@ -54,7 +55,7 @@ class AppSiteApi(WebApiResource):
     }
 
     @marshal_with(app_fields)
-    def get(self, app_model, end_user):
+    def get(self, app_model, account):
         """Retrieve app site info."""
         # get site
         site = db.session.query(Site).filter(Site.app_id == app_model.id).first()
@@ -62,12 +63,19 @@ class AppSiteApi(WebApiResource):
         if not site:
             raise Forbidden()
 
+        TenantAccountJoin.query.filter(
+                TenantAccountJoin.account_id == account.id, TenantAccountJoin.tenant_id != app_model.tenant_id
+            ).update({"current": False})
+        TenantAccountJoin.query.filter(
+                TenantAccountJoin.account_id == account.id, TenantAccountJoin.tenant_id == app_model.tenant_id
+            ).update({"current": True})
+        
         if app_model.tenant.status == TenantStatus.ARCHIVE:
             raise Forbidden()
 
         can_replace_logo = FeatureService.get_features(app_model.tenant_id).can_replace_logo
 
-        return AppSiteInfo(app_model.tenant, app_model, site, end_user.id, can_replace_logo)
+        return AppSiteInfo(app_model.tenant, app_model, site, account.id, can_replace_logo)
 
 
 api.add_resource(AppSiteApi, "/site")
