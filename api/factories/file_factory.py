@@ -126,8 +126,7 @@ def _build_from_local_file(
     except ValueError:
         raise ValueError("Invalid upload file id format")
     stmt = select(UploadFile).where(
-        UploadFile.id == upload_file_id,
-        UploadFile.tenant_id == tenant_id,
+        UploadFile.id == upload_file_id
     )
 
     row = db.session.scalar(stmt)
@@ -165,8 +164,7 @@ def _build_from_remote_url(
         except ValueError:
             raise ValueError("Invalid upload file id format")
         stmt = select(UploadFile).where(
-            UploadFile.id == upload_file_id,
-            UploadFile.tenant_id == tenant_id,
+            UploadFile.id == upload_file_id
         )
 
         upload_file = db.session.scalar(stmt)
