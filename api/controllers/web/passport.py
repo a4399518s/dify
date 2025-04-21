@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from flask import request
@@ -21,25 +22,31 @@ class PassportResource(Resource):
         app_code = request.headers.get("X-App-Code")
         app_token = request.headers.get("X-App-Token")
         if app_code is None:
+            logging.info(f"xxxxxxxxxxx passport content: X-App-Code header is missing")
             raise Unauthorized("X-App-Code header is missing.")
         if app_token is None:
+            logging.info(f"xxxxxxxxxxx passport content: X-App-Token header is missing")
             raise Unauthorized("X-App-Token header is missing.")
 
         if system_features.sso_enforced_for_web:
             app_web_sso_enabled = EnterpriseService.get_app_web_sso_enabled(app_code).get("enabled", False)
             if app_web_sso_enabled:
+                logging.info(f"xxxxxxxxxxx passport content: WebSSOAuthRequiredError")
                 raise WebSSOAuthRequiredError()
 
         # get site from db and check if it is normal
         site = db.session.query(Site).filter(Site.code == app_code, Site.status == "normal").first()
         if not site:
+            logging.info(f"xxxxxxxxxxx passport content: site error")
             raise NotFound()
         # get app from db and check if it is normal and enable_site
         app_model = db.session.query(App).filter(App.id == site.app_id).first()
         if not app_model or app_model.status != "normal" or not app_model.enable_site:
+            logging.info(f"xxxxxxxxxxx passport content: app_model error")
             raise NotFound()
         decoded = PassportService().verify(app_token)
         if not decoded:
+            logging.info(f"xxxxxxxxxxx passport token verify error")
             raise Unauthorized("X-App-Token header is missing.")
         user_id = decoded.get("user_id")
         payload = {
