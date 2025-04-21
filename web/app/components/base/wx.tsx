@@ -19,7 +19,8 @@ export function WxSubscribeButton() {
     <>
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' , height: '50px' }}>
       <wx-open-subscribe
-        template="daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM"
+        template="daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM" // 美数合
+        // template="ryq4gI3ZZftKKXaxPShUYPS-ti1pb2g92k_BSYCZ9DQ" // 循圣堂
         id="subscribe-btn"
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' , height: '50px' }}
       >

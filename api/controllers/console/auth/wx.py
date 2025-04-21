@@ -185,7 +185,8 @@ class WxPushMessage(Resource):
             return {"result": "error", "message": "用户不存在"}, 400
         res = client.message.send_subscribe_message(
             account_integrates.open_id,
-            'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM',
+            'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM', ## 美数合
+            # 'ryq4gI3ZZftKKXaxPShUYPS-ti1pb2g92k_BSYCZ9DQ', ## 循圣堂
             {
                 'thing1': {'value': 'AI视频'},
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},

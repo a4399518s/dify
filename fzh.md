@@ -12,10 +12,10 @@ export http_proxy="http://crash:202412231431@192.168.1.220:65534"
 export https_proxy="http://crash:202412231431@192.168.1.220:65534"
 
 
-export HTTPS_PROXY="http://crash:202412231431@192.168.1.220:65534"
-export HTTP_PROXY="http://crash:202412231431@192.168.1.220:65534"
-export http_proxy="http://crash:202412231431@192.168.1.220:65534"
-export https_proxy="http://crash:202412231431@192.168.1.220:65534"
+export HTTPS_PROXY="http://192.168.31.112:10088"
+export HTTP_PROXY="http://192.168.31.112:10088"
+export http_proxy="http://192.168.31.112:10088"
+export https_proxy="http://192.168.31.112:10088"
 
 unset HTTPS_PROXY
 unset HTTP_PROXY
