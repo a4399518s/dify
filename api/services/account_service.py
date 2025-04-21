@@ -202,6 +202,7 @@ class AccountService:
         password: Optional[str] = None,
         interface_theme: str = "light",
         is_setup: Optional[bool] = False,
+        point: Optional[int] = 0,
     ) -> Account:
         """create account"""
         # if not FeatureService.get_system_features().is_allow_register and not is_setup:
@@ -220,7 +221,7 @@ class AccountService:
         account = Account()
         account.email = email
         account.name = name
-
+        account.point = point
         if password:
             # generate password salt
             salt = secrets.token_bytes(16)

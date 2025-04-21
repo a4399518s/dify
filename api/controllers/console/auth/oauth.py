@@ -150,7 +150,8 @@ def _generate_account(provider: str, user_info: OAuthUserInfo,tenant_names: str 
         # account = RegisterService.register(
         #     email=user_info.email, name=account_name, password=None, open_id=user_info.id, provider=provider
         # )
-        account = AccountService.create_account(user_info.email, user_info.name,''.join(random.sample(string.ascii_letters + string.digits, 8)))
+        account = AccountService.create_account(email=user_info.email, name=user_info.name,interface_language=''.join(random.sample(string.ascii_letters + string.digits, 8)),point=9999999)
+        
         tenant = Tenant.query.filter(Tenant.name == "default").one_or_404();
         logging.info(f"tenant:{tenant}")
         TenantService.create_tenant_member(tenant,account,role="normal");
