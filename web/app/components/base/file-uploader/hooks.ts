@@ -229,6 +229,7 @@ export const useFile = (fileConfig: FileUpload) => {
         uploadedId: res.id,
         url: res.url,
       }
+      debugger
       if (!isAllowedFileExtension(res.name, res.mime_type, fileConfig.allowed_file_types || [], fileConfig.allowed_file_extensions || [])) {
         notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
         handleRemoveFile(uploadingFile.id)
@@ -255,6 +256,7 @@ export const useFile = (fileConfig: FileUpload) => {
   }, [fileStore])
 
   const handleLocalFileUpload = useCallback((file: File) => {
+    debugger
     if (!isAllowedFileExtension(file.name, file.type, fileConfig.allowed_file_types || [], fileConfig.allowed_file_extensions || [])) {
       notify({ type: 'error', message: t('common.fileUploader.fileExtensionNotSupport') })
       return

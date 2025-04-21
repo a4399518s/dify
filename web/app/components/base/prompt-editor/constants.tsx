@@ -51,7 +51,7 @@ export const getInputVars = (text: string): ValueSelector[] => {
 }
 
 export const FILE_EXTS: Record<string, string[]> = {
-  [SupportUploadFileTypes.image]: ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'SVG'],
+  [SupportUploadFileTypes.image]: ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'SVG','DNG','AVIF','WEBP','HEIC','HEIF','TIFF','TIF'],
   [SupportUploadFileTypes.document]: ['TXT', 'MD', 'MDX', 'MARKDOWN', 'PDF', 'HTML', 'XLSX', 'XLS', 'DOC', 'DOCX', 'CSV', 'EML', 'MSG', 'PPTX', 'PPT', 'XML', 'EPUB'],
   [SupportUploadFileTypes.audio]: ['MP3', 'M4A', 'WAV', 'WEBM', 'AMR', 'MPGA'],
   [SupportUploadFileTypes.video]: ['MP4', 'MOV', 'MPEG', 'MPGA'],
