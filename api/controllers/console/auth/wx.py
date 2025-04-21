@@ -35,8 +35,8 @@ from wechatpy.replies import TextReply,EmptyReply
 import hashlib
 import requests
 
-appId='wxd16fa5d21589fabd'
-appSecret='72aabbac34818a50ad7adb114ee9122b'
+appId='wxe35e6bd987043ea1'
+appSecret='e41e275f19a71b7b6c772807317c002c'
 client = WeChatClient(appId, appSecret)
 
 def ask_question(prompt: str, model: str = "qwq:latest", host: str = "http://ollama.fzh.cloud"):
@@ -185,8 +185,8 @@ class WxPushMessage(Resource):
             return {"result": "error", "message": "用户不存在"}, 400
         res = client.message.send_subscribe_message(
             account_integrates.open_id,
-            'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM', ## 美数合
-            # 'ryq4gI3ZZftKKXaxPShUYPS-ti1pb2g92k_BSYCZ9DQ', ## 循圣堂
+            # 'daRbCWvn3k2LDdWP6Atfm7CGYGuB-Zo87s6Ng2HrszM', ## 美数合
+            'ryq4gI3ZZftKKXaxPShUYPS-ti1pb2g92k_BSYCZ9DQ', ## 循圣堂
             {
                 'thing1': {'value': 'AI视频'},
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},

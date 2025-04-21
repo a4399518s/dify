@@ -50,8 +50,9 @@ class PassportResource(Resource):
             logging.info(f"xxxxxxxxxxx passport content: app_model error")
             raise NotFound()
         
-        logging.info(f"xxxxxxxxxxx passport 555")
+        # logging.info(f"xxxxxxxxxxx passport 555")
         decoded = PassportService().verify(app_token)
+        # logging.info(f"xxxxxxxxxxx passport 555  111")
         if not decoded:
             logging.info(f"xxxxxxxxxxx passport token verify error")
             raise Unauthorized("X-App-Token header is missing.")

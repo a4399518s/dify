@@ -142,7 +142,7 @@ class WxOAuth(OAuth):
 
     def get_authorization_url(self, tenant_names: Optional[str] = None):
         params = {
-            "appid": "wxd16fa5d21589fabd",
+            "appid": "wxe35e6bd987043ea1",
             "response_type": "code",
             "redirect_uri": self.redirect_uri,
             "scope": "snsapi_userinfo",
@@ -153,8 +153,8 @@ class WxOAuth(OAuth):
 
     def get_access_token(self, code: str):
         data = {
-            "appid": "wxd16fa5d21589fabd",
-            "secret": "72aabbac34818a50ad7adb114ee9122b",
+            "appid": "wxe35e6bd987043ea1",
+            "secret": "e41e275f19a71b7b6c772807317c002c",
             "code": code,
             "grant_type": "authorization_code",
             "redirect_uri": self.redirect_uri,
@@ -172,7 +172,7 @@ class WxOAuth(OAuth):
         return access_token
 
     def get_raw_user_info(self, token: str):
-        response = requests.get(f"{self._USER_INFO_URL}?access_token={token}&openid=wxd16fa5d21589fabd&lang=zh_CN")
+        response = requests.get(f"{self._USER_INFO_URL}?access_token={token}&openid=wxe35e6bd987043ea1&lang=zh_CN")
         response.raise_for_status()
         return response.json()
 

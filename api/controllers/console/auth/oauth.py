@@ -47,8 +47,8 @@ def get_oauth_providers():
             )
 
         wx_oauth = WxOAuth(
-            client_id="wxd16fa5d21589fabd",
-            client_secret="72aabbac34818a50ad7adb114ee9122b",
+            client_id="wxe35e6bd987043ea1",
+            client_secret="e41e275f19a71b7b6c772807317c002c",
             # redirect_uri=dify_config.CONSOLE_API_URL + "/console/api/oauth/authorize/wx",
             redirect_uri="https://agent.meishuhe.cn/console/api/oauth/authorize/wx",
         )
