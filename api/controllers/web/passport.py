@@ -18,6 +18,7 @@ class PassportResource(Resource):
     """Base resource for passport."""
 
     def get(self):
+        logging.info(f"xxxxxxxxxxx passport")
         system_features = FeatureService.get_system_features()
         app_code = request.headers.get("X-App-Code")
         app_token = request.headers.get("X-App-Token")
