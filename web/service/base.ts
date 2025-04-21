@@ -473,6 +473,17 @@ export const request = async<T>(url: string, options = {}, otherOptions?: IOther
       return Promise.reject(err)
     }
     if (errResp.status === 401) {
+      refreshAccessTokenOrRelogin(TIME_OUT).then(() => {
+        globalThis.location.reload()
+        return Promise.reject(err)
+      }).catch(() => {
+        localStorage.removeItem('console_token')
+        localStorage.removeItem('refresh_token')
+        localStorage.removeItem('token')
+        localStorage.removeItem('conversationIdInfo')
+        localStorage.removeItem('signin_path')
+        globalThis.location.reload()
+      })
       const [parseErr, errRespData] = await asyncRunSafe<ResponseError>(errResp.json())
       const loginUrl = `${globalThis.location.origin}/signin`
       if (parseErr) {
