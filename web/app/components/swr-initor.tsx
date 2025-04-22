@@ -66,7 +66,9 @@ const SwrInitor = ({
         setInit(true)
         const sharedToken = localStorage.getItem("sharedToken");
         if (sharedToken) {
-          localStorage.removeItem("sharedToken");
+          if(location.pathname.startsWith("/chat")){
+            localStorage.removeItem("sharedToken");
+          }          
           location.href = `/chat/${sharedToken}`;
           // router.replace(`/chat/${sharedToken}`);
           return;
