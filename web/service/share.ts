@@ -267,7 +267,6 @@ export const textToAudioStream = (url: string, isPublicAPI: boolean, header: { c
 export const fetchAccessToken = async (appCode: string) => {
   const headers = new Headers()
   const accessToken = getAccessToken(false)
-  debugger
   if(accessToken==undefined || accessToken==""){
     localStorage.setItem("sharedToken", appCode)
     window.location.href = '/signin'

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Local Storage Viewer</h1>
+    <button onclick="clearLocalStorage()">Clear All Local Storage</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="storageTable">
+        </tbody>
+    </table>
+
+    <script>
+        function loadLocalStorage() {
+            const tableBody = document.getElementById('storageTable');
+            tableBody.innerHTML = '';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${key}</td>
+                    <td>${value}</td>
+                    <td><button onclick="deleteItem('${key}')">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        function deleteItem(key) {
+            localStorage.removeItem(key);
+            loadLocalStorage();
+        }
+
+        function clearLocalStorage() {
+            localStorage.clear();
+            loadLocalStorage();
+        }
+
+        // Load local storage content on page load
+        window.onload = loadLocalStorage;
+    </script>
+</body>
+</html>
