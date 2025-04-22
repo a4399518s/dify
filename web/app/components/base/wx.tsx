@@ -36,7 +36,7 @@ export function WxSubscribeButton() {
               cursor: 'pointer',
             }}
             >
-            订阅视频通知
+            点击订阅视频通知
             </button>
         </script>
       </wx-open-subscribe>
