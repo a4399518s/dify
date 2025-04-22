@@ -7,6 +7,8 @@ import InputsFormContent from '@/app/components/base/chat/chat-with-history/inpu
 import { useChatWithHistoryContext } from '../context'
 import cn from '@/utils/classnames'
 
+import { Markdown } from '@/app/components/base/markdown'
+
 type Props = {
   collapsed: boolean
   setCollapsed: (collapsed: boolean) => void
@@ -22,6 +24,8 @@ const InputsFormNode = ({
     currentConversationId,
     handleStartChat,
     themeBuilder,
+    appData,
+    
   } = useChatWithHistoryContext()
 
   return (
@@ -43,6 +47,15 @@ const InputsFormNode = ({
           {!collapsed && currentConversationId && (
             <Button className='uppercase text-text-tertiary' size='small' variant='ghost' onClick={() => setCollapsed(true)}>{t('common.operation.close')}</Button>
           )}
+        </div>
+        <div className={cn(
+          'flex items-center gap-3 rounded-t-2xl px-6 py-4',
+          !collapsed && 'border-b border-divider-subtle',
+          isMobile && 'px-4 py-3',
+        )}>
+          {appData?.site?.description ? (
+            <Markdown content={appData.site.description} />
+          ) : null}
         </div>
         {!collapsed && (
           <div className={cn('p-6', isMobile && 'p-4')}>

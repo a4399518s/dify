@@ -20,7 +20,7 @@ from events.tenant_event import tenant_was_created
 from extensions.ext_database import db
 from libs.helper import extract_remote_ip
 from libs.oauth import GitHubOAuth, GoogleOAuth, OAuthUserInfo, WxOAuth
-from models import Account
+from models import Account,Conversation, Site
 
 from models import AccountIntegrate, InvitationCode
 from models.account import AccountStatus, Tenant
@@ -179,8 +179,11 @@ class WxConfigMessage(Resource):
 
 class WxPushMessage(Resource):
     def get(self):
-        userId = request.args.get('userId')
-        account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.account_id == userId).one_or_none()
+        dify_conversation_id = request.args.get('dify_conversation_id')
+        conversation = db.session.query(Conversation).filter(Conversation.id == dify_conversation_id).one_or_none()
+        account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.account_id == conversation.from_account_id).one_or_none()
+        site = db.session.query(Site).filter(Site.app_id == conversation.app_id, Site.status == "normal").first()
+        
         if account_integrates is None:
             return {"result": "error", "message": "用户不存在"}, 400
         res = client.message.send_subscribe_message(
@@ -192,7 +195,7 @@ class WxPushMessage(Resource):
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
                 'thing3': {'value': "您的视频生成成功，请进入菜单查看"},
                 # 按照你的模板字段来填写
-            },None,'https://agent.meishuhe.cn/chat/QVK5g3vYXvspTrNw'
+            },None,'https://agent.meishuhe.cn/chat/'+site.code
         )
         logging.info(f"xxxxxxxxxxx WxCallbackMessage: {res}")
 
