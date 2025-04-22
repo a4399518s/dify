@@ -11,7 +11,9 @@ window.addEventListener('load', function () {
             console.log("wx ready")
         });
         wx.error(function (res) {
-            alert("错误"+res.errMsg);
+            // alert("错误"+res.errMsg);
+            console.log("err",res.errMsg);
+            location.reload();
         })
         wx.config(data.data);
     }).catch(error => {
