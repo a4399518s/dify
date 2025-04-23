@@ -23,9 +23,10 @@ import cn from '@/utils/classnames'
 
 type Props = {
   isPanel?: boolean
+  callback?: () => void;
 }
 
-const Sidebar = ({ isPanel }: Props) => {
+const Sidebar = ({ isPanel,callback }: Props) => {
   const { t } = useTranslation()
   const {
     appData,
@@ -90,7 +91,13 @@ const Sidebar = ({ isPanel }: Props) => {
     if (showRename)
       handleRenameConversation(showRename.id, newName, { onSuccess: handleCancelRename })
   }, [showRename, handleRenameConversation, handleCancelRename])
-
+  const newConversation = useCallback(() => {
+    console.log("cccccccccc")
+    if(callback){
+      callback();
+    }    
+    handleNewConversation()
+  }, [])
   return (
     <div className={cn(
       'flex w-full grow flex-col',
@@ -121,9 +128,10 @@ const Sidebar = ({ isPanel }: Props) => {
         )}
       </div>
       <div className='shrink-0 px-3 py-4'>
-        <Button variant='secondary-accent' disabled={isResponding} className='w-full justify-center' onClick={handleNewConversation}>
+        {/* <Button variant='secondary-accent' disabled={isResponding} className='w-full justify-center' onClick={handleNewConversation}> */}
+        <Button variant='secondary-accent' disabled={isResponding} className='w-full justify-center' onClick={newConversation}>
           <RiEditBoxLine className='mr-1 h-4 w-4' />
-          {t('share.chat.newChat')}
+          {t('share.chat.newChat')}1111
         </Button>
       </div>
       <div className='h-0 grow space-y-2 overflow-y-auto px-3 pt-4'>

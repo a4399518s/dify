@@ -61,7 +61,10 @@ const HeaderInMobile = () => {
   }, [showRename, handleRenameConversation, handleCancelRename])
   const [showSidebar, setShowSidebar] = useState(false)
   const [showChatSettings, setShowChatSettings] = useState(false)
-
+  const callback = useCallback(() => {
+    console.log("callback 111")
+    setShowSidebar(false)
+  }, [])
   return (
     <>
       <div className='flex shrink-0 items-center gap-1 bg-mask-top2bottom-gray-50-to-transparent px-2 py-3'>
@@ -106,7 +109,7 @@ const HeaderInMobile = () => {
           onClick={() => setShowSidebar(false)}
         >
           <div className='flex h-full w-[calc(100vw_-_40px)] rounded-xl bg-components-panel-bg shadow-lg backdrop-blur-sm' onClick={e => e.stopPropagation()}>
-            <Sidebar />
+            <Sidebar callback={callback} />
           </div>
         </div>
       )}
