@@ -180,9 +180,10 @@ class WxConfigMessage(Resource):
 class WxPushMessage(Resource):
     def get(self):
         dify_conversation_id = request.args.get('dify_conversation_id')
+        url = request.args.get('url')
         conversation = db.session.query(Conversation).filter(Conversation.id == dify_conversation_id).one_or_none()
         account_integrates = db.session.query(AccountIntegrate).filter(AccountIntegrate.account_id == conversation.from_account_id).one_or_none()
-        site = db.session.query(Site).filter(Site.app_id == conversation.app_id, Site.status == "normal").first()
+        # site = db.session.query(Site).filter(Site.app_id == conversation.app_id, Site.status == "normal").first()
         
         if account_integrates is None:
             return {"result": "error", "message": "用户不存在"}, 400
@@ -195,7 +196,7 @@ class WxPushMessage(Resource):
                 'time2': {'value': datetime.now().strftime('%Y/%m/%d %H:%M')},
                 'thing3': {'value': "您的视频生成成功，请进入菜单查看"},
                 # 按照你的模板字段来填写
-            },None,'https://agent.meishuhe.cn/chat/'+site.code
+            },None,url
         )
         logging.info(f"xxxxxxxxxxx WxCallbackMessage: {res}")
 
