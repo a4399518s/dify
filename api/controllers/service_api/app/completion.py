@@ -1,5 +1,6 @@
 import logging
 
+from models.model import Account, App, AppMode, EndUser
 from flask_restful import Resource, reqparse  # type: ignore
 from werkzeug.exceptions import InternalServerError, NotFound
 
@@ -95,7 +96,7 @@ class CompletionStopApi(Resource):
 
 class ChatApi(Resource):
     @validate_app_token(fetch_user_arg=FetchUserArg(fetch_from=WhereisUserArg.JSON, required=True))
-    def post(self, app_model: App, end_user: EndUser):
+    def post(self, app_model: App, account: Account):
         
         logging.info(f"xxxxxxxxxxxxx ChatApi")
         
@@ -118,7 +119,7 @@ class ChatApi(Resource):
 
         try:
             response = AppGenerateService.generate(
-                app_model=app_model, user=end_user, args=args, invoke_from=InvokeFrom.SERVICE_API, streaming=streaming
+                app_model=app_model, user=account, args=args, invoke_from=InvokeFrom.SERVICE_API, streaming=streaming
             )
 
             return helper.compact_generate_response(response)

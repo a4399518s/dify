@@ -1521,6 +1521,7 @@ class ApiToken(Base):
     tenant_id = db.Column(StringUUID, nullable=True)
     type = db.Column(db.String(16), nullable=False)
     token = db.Column(db.String(255), nullable=False)
+    user_id = db.Column(StringUUID, nullable=False)
     last_used_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, nullable=False, server_default=func.current_timestamp())
 
